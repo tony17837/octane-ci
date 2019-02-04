@@ -3,14 +3,26 @@
 # Runs in the web container, NOT the build container.
 # So ONLY use drush commands here, or other tools available in web container.
 
-# Clear cache before updates.
-drush cr
+DRUPAL_DB=`drush status --fields=db-hostname`
+if [ ! -z "$DRUPAL_DB" ]; then
 
-# Run any core or module update hooks.
-drush updb -y
+  # Clear cache before updates.
+  echo "Clearing cache..."
+  drush cr
 
-# Import configuration. This will overwrite any local changes in your DB.
-drush config-import -y
+  # Run any core or module update hooks.
+  echo "Running updates..."
+  drush updb -y
 
-# Need a clear-cache here in case new configuration is needed in theme.
-drush cr
+  # Import configuration. This will overwrite any local changes in your DB.
+  echo "Importing config..."
+  drush config-import -y
+
+  # Need a clear-cache here in case new configuration is needed in theme.
+  echo "Clearing cache..."
+  drush cr
+
+else
+  # If we don't have a Drupal site, install it now.
+  ./install.sh
+fi
