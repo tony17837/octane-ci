@@ -1,0 +1,28 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.cmsfiles.existingClaim) -}}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ template "chart.fullname" . }}-files
+  labels:
+    app: {{ template "chart.fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  {{- if .Values.persistence.cmsfiles.hostPath }}
+  storageClassName: ""
+  {{- end }}
+  accessModes:
+    - {{ .Values.persistence.cmsfiles.accessMode | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.cmsfiles.size | quote }}
+{{- if and .Values.persistence.cmsfiles.storageClass (not .Values.persistence.cmsfiles.hostPath) -}}
+# TODO is vmsfiles here a bug and should be cmsfiles?
+{{- if (eq "-" .Values.persistence.vmsfiles.storageClass) }}
+  storageClassName: ""
+{{- else }}
+  storageClassName: "{{ .Values.persistence.cmsfiles.storageClass }}"
+{{- end }}
+{{- end }}
+{{- end -}}

@@ -1,0 +1,94 @@
+# Set default values for your chart (and dependent charts) here.
+# Note that there are values which are expected to be specified via
+# helm ... --set item=${ENVIRONMENTAL_VARIABLE} to support this file
+# being a good generic template for a project to start with. These
+# can be identified as commented items along with the environmental
+# variable which typically is used to set them.
+replicaCount: 1
+# nameOverride=${CI_ENVIRONMENT_SLUG}
+# nameOverride: THIS_MUST_BE_DYNAMIC_TO_SUPPORT_MULTIPLE_ENVIRONMENTS
+image:
+  # image.repository=${WEB_IMAGE}
+  # repository: PUT_REPO_AND_IMAGE_PATH_HERE
+  # tag: latest
+  pullPolicy: Always
+service:
+  name: http
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 80
+ingress:
+  enabled: true
+  #url:
+    # ingress.url.env=${PROJECT_ENV}
+    # env: "dev"
+    # ingress.url.project=${PROJECT_NAME}
+    # project: "PROJECT_NAME"
+  annotations:
+    kubernetes.io/ingress.class: traefik
+env:
+  docroot: /var/www/docroot
+  phpMaxExecutionTime: 60
+  # Note: This only affects PHP memory in Apache.  To change PHP command line
+  # change the .gitlab-ci/99-project-php-settings.ini file
+  phpMemoryLimit: 256M
+  # env.tier=${PROJECT_TIER}
+  # tier: "dev"
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+persistence:
+  enabled: true
+  cmsfiles:
+    ## drupal files Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+## Configure volume mounts. This is useful for images whose data mount paths are
+## different than the default.
+## Setting volumeMounts.apache.mountPath to "" prevents Apache config mount.
+volumeMounts:
+  cmsfiles:
+    mountPath: /var/www/docroot/sites/default/files
+
+##
+## MariaDB sub-chart configuration
+##
+mariadb:
+  ## MariaDB admin password
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#setting-the-root-password-on-first-run
+  ##
+  # Default used in Docksal, see ./docksal/docksal.env
+  mariadbUser: admin
+  mariadbPassword: admin
+
+  ## Create a database
+  ## ref: https://github.com/bitnami/bitnami-docker-mariadb/blob/master/README.md#creating-a-database-on-first-run
+  # Default used in Docksal, see ./docksal/docksal.env
+  mariadbDatabase: drupal_octane
+
+  ## Enable persistence using Persistent Volume Claims
+  ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  ##
+  persistence:
+    enabled: true
+    ## mariadb data Persistent Volume Storage Class
+    ## If defined, storageClassName: <storageClass>
+    ## If set to "-", storageClassName: "", which disables dynamic provisioning
+    ## If undefined (the default) or set to null, no storageClassName spec is
+    ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+    ##   GKE, AWS & OpenStack)
+    ##
+    # storageClass: "-"
+    accessMode: ReadWriteOnce
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 100m

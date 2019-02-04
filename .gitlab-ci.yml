@@ -1,0 +1,131 @@
+image: outrigger/gitlab-ci-workspace:stable
+
+services:
+  - docker:stable-dind
+
+variables:
+  # PROJECT_NAME is ideally set in the CI/CD variables instead of declared here
+  # PROJECT_NAME: PUT_PROJECT_NAME_HERE
+
+  # KUBE_NAMESPACE is ideally set in the CI/CD variables instead of declaed here
+  # KUBE_NAMESPACE: PUT_NAMESPACE_HERE
+
+  # CI_REGISTRY_IMAGE isn't used directly to structurally allow for projects with
+  # multiple images which may need to be built. However, the majority are
+  # expected to only ever need to build one image.
+  WEB_IMAGE: ${CI_REGISTRY_IMAGE}/web
+
+stages:
+  # tasks are intended for items which are only run manually and don't need
+  # a build to succeed in order to be able to execute. The idea is that they
+  # are always skipped in any automatic activities but come before a build so
+  # that if it fails it doesn't effect the ability to run a task
+  - tasks
+  - build
+  - deploy
+  - install
+  - test
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - docroot
+
+before_script:
+  # Dump some debugging so we know what variables and values we have to work with
+  - set
+  # Sanity check to make sure the project is configured
+  - ./.gitlab-ci/check-settings.sh
+  # Set environmental variables based on environment this is running in
+  - source ./.gitlab-ci/env-vars.sh
+
+.deploy_script: &deploy_script
+  script:
+    # Create a Docker Registry secret (if it doesn't exist) so we can pull images
+    # via imagePullSecrets. This depends on a deploy token having been created
+    # with name gitlab-deploy-token. See the note about the special naming at
+    # https://gitlab.com/help/user/project/deploy_tokens/index#read-container-registry-images
+    - kubectl get secret gitlab-registry-secret || kubectl create secret docker-registry gitlab-registry-secret --docker-server=${CI_REGISTRY} --docker-username=${CI_DEPLOY_USER} --docker-password=${CI_DEPLOY_PASSWORD} --docker-email=${GITLAB_USER_EMAIL}
+    # Download chart dependencies
+    - helm dependency build ./.gitlab-ci/chart
+    # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
+    - helm upgrade --install --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG} ./.gitlab-ci/chart
+    # If you need to perform actions after a deployment you need to allow time
+    # for the containers to spin up. This is done via a variable with a default
+    # value so that it can be changed in the CI/CD settings rather than requiring
+    # modification and a deployment
+    - sleep ${POST_DEPLOY_SLEEP:-120}
+    # Add any post-deploy commands here, such as flowdock notifications
+    # - ./.gitlab-ci/flowdock-notify.sh "Deployment complete for ${CI_COMMIT_TITLE} to ${CI_ENVIRONMENT_URL}"
+
+.cleanup_script: &cleanup_script
+  variables:
+    # This has to match how things line up in the deploy script
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  script:
+    - helm delete --purge ${RELEASE_NAME}
+  when: manual
+
+build:
+  stage: build
+  script:
+    # Login so we can push images to the registry
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # assemble the codebase
+    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
+    # bundle it into a docker image
+    - cp .gitlab-ci/Dockerfile .
+    - docker build -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
+    # Tag it based on slug (branch name) too which can allow for easier commands
+    # of the form "deploy the latest version of BRANCH"
+    - docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    # Push all the plain tags and the qa variants
+    - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
+    - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
+
+deploy_master:
+  stage: deploy
+  variables:
+    PROJECT_ENV: dev
+    PROJECT_TIER: dev
+  <<: *deploy_script
+  environment:
+    name: ${PROJECT_ENV}
+    url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
+  only:
+    - /^master$/
+
+install:
+  stage: install
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh
+  only:
+    - /^master/
+
+run_tests:
+  stage: test
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - ./.gitlab-ci/web-container-exec.sh composer test
+  only:
+    - /^master/
+
+clean_up_environment:
+  stage: tasks
+  <<: *cleanup_script
+  environment:
+    name: dev
+    action: stop
+  only:
+    - /^master/
+  when: manual

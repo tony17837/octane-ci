@@ -1,0 +1,7 @@
+dependencies:
+- name: mariadb
+  version: "2.1.8"
+  repository: "https://kubernetes-charts.storage.googleapis.com/"
+- name: memcached
+  version: "2.3.1"
+  repository: "https://kubernetes-charts.storage.googleapis.com/"

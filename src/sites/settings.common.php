@@ -15,14 +15,14 @@ $config_directories = array(
 );
 
 $databases['default']['default'] = array (
-  'database' => 'drupal_octane',
-  'username' => 'admin',
-  'password' => 'admin',
-  'prefix' => '',
-  'host' => 'db',
-  'port' => '',
+  'database' => getenv('MYSQL_DATABASE'),
+  'username' => getenv('MYSQL_USER'),
+  'password' => getenv('MYSQL_PASSWORD'),
+  'host' => getenv('MYSQL_HOST'),
+  'port' => getenv('MYSQL_PORT'),
   'namespace' => 'Drupal\\Core\\Database\\Driver\\mysql',
   'driver' => 'mysql',
+  'prefix' => '',
 );
 
 // Load environment specific settings.

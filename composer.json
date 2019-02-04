@@ -40,7 +40,8 @@
         "se/selenium-server-standalone": "^2.53",
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
-        "symfony/debug": "^3.4.0"
+        "symfony/debug": "^3.4.0",
+        "weitzman/drupal-test-traits": "~1.0"
     },
     "require": {
         "acquia/lightning": "^4.0@alpha",
@@ -62,6 +63,9 @@
         "kporras07/composer-symlinks": "^0.1.0@dev",
         "roave/security-advisories": "dev-master"
     },
+    "autoload-dev": {
+        "psr-4": { "Octane\\Tests\\": "test/src/" }
+    },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
         "project-scaffold": [
@@ -74,10 +78,17 @@
         "post-update-cmd": [
             "@project-scaffold",
             "@drupal-scaffold"
+        ],
+        "test:unit": "phpunit --printer '\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter'",
+        "test": [
+            "@test:unit"
         ]
     },
     "extra": {
         "enable-patching": true,
+        "patchLevel": {
+            "drupal/core": "-p2"
+        },
         "patches": {
             "drupal/core": {
                 "2699157 - Plugin Lazy loading can cause usort warning": "https://www.drupal.org/files/issues/2699157-23.drupal.Plugin-Lazy-loading-can-cause-usort-warning.patch",
@@ -90,35 +101,38 @@
             "npm-asset"
         ],
         "installer-paths": {
-            "build/html/core": [
+            "docroot/core": [
                 "type:drupal-core"
             ],
-            "build/html/modules/contrib/{$name}": [
+            "docroot/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "build/html/profiles/contrib/{$name}": [
+            "docroot/libraries/contrib/{$name}": [
+                "type:drupal-library"
+            ],
+            "docroot/profiles/contrib/{$name}": [
                 "type:drupal-profile"
             ],
-            "build/html/themes/contrib/{$name}": [
+            "docroot/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
             "src/themes/{$name}": [
                 "type:drupal-custom-theme"
             ],
-            "build/html/drush/contrib/{$name}": [
+            "docroot/drush/contrib/{$name}": [
                 "type:drupal-drush"
             ]
         },
         "symlinks": {
-            "src/modules": "build/html/modules/custom",
-            "src/themes": "build/html/themes/custom",
-            "src/profiles": "build/html/profiles/custom",
-            "src/libraries": "build/html/libraries/custom",
-            "src/sites/default": "build/html/sites/default",
-            "src/sites/settings.common.php": "build/html/sites/settings.common.php",
-            "src/sites/settings.common-client.php": "build/html/sites/settings.common-client.php",
-            "src/sites/settings.common-local.php": "build/html/sites/settings.common-local.php",
-            "src/sites/settings.memcache.php": "build/html/sites/settings.memcache.php"
+            "src/modules": "docroot/modules/custom",
+            "src/themes": "docroot/themes/custom",
+            "src/profiles": "docroot/profiles/custom",
+            "src/libraries": "docroot/libraries/custom",
+            "src/sites/default": "docroot/sites/default",
+            "src/sites/settings.common.php": "docroot/sites/settings.common.php",
+            "src/sites/settings.common-client.php": "docroot/sites/settings.common-client.php",
+            "src/sites/settings.common-local.php": "docroot/sites/settings.common-local.php",
+            "src/sites/settings.memcache.php": "docroot/sites/settings.memcache.php"
         }
     }
 }

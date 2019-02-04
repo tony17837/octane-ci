@@ -1,0 +1,16 @@
+##
+# Allow for local helm operations if needed (usually updating requirements)
+#
+# Use via docker-compose -f helm.yml run --rm cli
+# Your first command should probably be: helm init --client-only
+##
+version: '3.2'
+
+services:
+  cli:
+    image: alpine/helm:2.7.0
+    network_mode: "bridge"
+    entrypoint: /bin/sh
+    working_dir: /chart
+    volumes:
+      - ./chart:/chart
