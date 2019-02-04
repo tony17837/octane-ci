@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Install the Drupal site.
+# Runs in the web container, so only use drush commands, no other tools.
 
 # Parse comment line arguments
 CONFIRM=''

@@ -23,7 +23,7 @@ stages:
   - tasks
   - build
   - deploy
-  - install
+  - update
   - test
 
 cache:
@@ -98,8 +98,21 @@ deploy_master:
     - /^master$/
   when: manual
 
+update:
+  stage: update
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update.sh
+  only:
+    - /^master/
+  when: manual
+
 install:
-  stage: install
+  stage: tasks
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
