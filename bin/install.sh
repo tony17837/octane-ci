@@ -3,6 +3,9 @@
 
 # Parse comment line arguments
 CONFIRM=''
+if [ "${CI}" = "true" ]; then
+  CONFIRM='-y'
+fi
 while [[ $# -gt 0 ]]; do
   case $1 in
     -y)

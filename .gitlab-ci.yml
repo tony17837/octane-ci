@@ -83,6 +83,7 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
+  when: manual
 
 deploy_master:
   stage: deploy
@@ -95,6 +96,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
+  when: manual
 
 install:
   stage: install
@@ -107,6 +109,7 @@ install:
     - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh
   only:
     - /^master/
+  when: manual
 
 run_tests:
   stage: test
@@ -119,6 +122,7 @@ run_tests:
     - ./.gitlab-ci/web-container-exec.sh composer test
   only:
     - /^master/
+  when: manual
 
 clean_up_environment:
   stage: tasks
