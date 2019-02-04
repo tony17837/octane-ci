@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Install Particle
+# This runs within the CLI container, so all tools are available.
 
 THEME_PATH="src/themes/particle"
 # Only download particle theme if it doesn't already exist.

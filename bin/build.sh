@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# This runs within the CLI container, so all tools are available.
+
+# Init the tools like npm within the cli container
+source ~/.profile
 
 # Install project requirements.
 composer clear-cache
