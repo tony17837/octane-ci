@@ -57,9 +57,13 @@ before_script:
     - echo "Starting helm"
     - date
     - helm upgrade --install --wait --timeout 180 --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG} ./.gitlab-ci/chart
-    - echo "Finished helm"
+    - echo "Watching rollout status"
     - date
     - kubectl get pods
+    - kubectl rollout status --watch
+    - kubectl get pods
+    - echo "Finished helm"
+    - date
     # If you need to perform actions after a deployment you need to allow time
     # for the containers to spin up. This is done via a variable with a default
     # value so that it can be changed in the CI/CD settings rather than requiring
