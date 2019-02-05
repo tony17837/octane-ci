@@ -60,7 +60,7 @@ before_script:
     - echo "Watching rollout status"
     - date
     - kubectl get pods
-    - kubectl rollout status --watch
+    - kubectl rollout status --watch deployment/${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-${CI_ENVIRONMENT_SLUG}
     - kubectl get pods
     - echo "Finished helm"
     - date
