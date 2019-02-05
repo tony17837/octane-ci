@@ -4,9 +4,15 @@
 # Init the tools like npm within the cli container
 source ~/.profile
 
-# Install project requirements.
-composer clear-cache
+# Install project dependencies from composer.
+
+# Uncomment the following command if you want to continue building if patches
+# fail to apply.
 COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi
+#
+# Uncomment the following command if you want to ABORT building if patches
+# fail to apply.
+# COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi
 
 # Build the theme
 THEME_PATH="src/themes/particle"

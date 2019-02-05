@@ -4,11 +4,14 @@
 # daily workflow.
 # Runs in the Build container, so all tools are available.
 
+# Init the tools like npm within the cli container
+source ~/.profile
+
 CURRENT_DIR=${PWD}
 
 # Uncomment the following command if you want to continue building if patches
 # fail to apply.
-# COMPOSER_DISCARD_CHANGES=1 composer install
+# COMPOSER_DISCARD_CHANGES=1 composer install --ansi
 #
 # Uncomment the following command if you want to ABORT building if patches
 # fail to apply.
