@@ -49,7 +49,7 @@ before_script:
     # with name gitlab-deploy-token. See the note about the special naming at
     # https://gitlab.com/help/user/project/deploy_tokens/index#read-container-registry-images
     - kubectl get secret gitlab-registry-secret || kubectl create secret docker-registry gitlab-registry-secret --docker-server=${CI_REGISTRY} --docker-username=${CI_DEPLOY_USER} --docker-password=${CI_DEPLOY_PASSWORD} --docker-email=${GITLAB_USER_EMAIL}
-    - helm init --upgrade
+    #- helm init --upgrade
     # Download chart dependencies
     - helm dependency build ./.gitlab-ci/chart
     # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
