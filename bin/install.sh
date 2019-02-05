@@ -4,7 +4,7 @@
 
 # Parse comment line arguments
 CONFIRM=''
-if [ "${CI}" = "true" ]; then
+if [ ! -z "$CI" ]; then
   CONFIRM='-y'
 fi
 while [[ $# -gt 0 ]]; do
@@ -19,6 +19,7 @@ while [[ $# -gt 0 ]]; do
     ;;
   esac
 done
+echo "Installing Drupal ${CONFIRM}"
 
 if [ -z "$PROFILE" ]; then
   # Default install profile is Acquia Lightning.
