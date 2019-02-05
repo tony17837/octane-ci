@@ -49,12 +49,16 @@ before_script:
     # Download chart dependencies
     - helm dependency build ./.gitlab-ci/chart
     # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
-    - helm upgrade --install --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG} ./.gitlab-ci/chart
+    - echo "Starting helm"
+    - date
+    - helm upgrade --install --wait --timeout 180 --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG} ./.gitlab-ci/chart
+    - echo "Finished helm"
+    - date
     # If you need to perform actions after a deployment you need to allow time
     # for the containers to spin up. This is done via a variable with a default
     # value so that it can be changed in the CI/CD settings rather than requiring
     # modification and a deployment
-    - sleep ${POST_DEPLOY_SLEEP:-120}
+    # - sleep ${POST_DEPLOY_SLEEP:-120}
     # Add any post-deploy commands here, such as flowdock notifications
     # - ./.gitlab-ci/flowdock-notify.sh "Deployment complete for ${CI_COMMIT_TITLE} to ${CI_ENVIRONMENT_URL}"
 
