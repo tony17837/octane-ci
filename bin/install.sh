@@ -36,11 +36,11 @@ cd /var/www/docroot
 if [ -e "src/config/default/system.site.yml" ]; then
   # If config exists, install using it.
   printf "${YELLOW}Installing Drupal from existing config...${NORMAL}\n"
-  #drush si --db-url=$DB_URL --account-pass="admin" --existing-config $CONFIRM
+  drush si --db-url=$DB_URL --account-pass="admin" --existing-config $CONFIRM
 else
   # Otherwise install clean from profile.
   printf "${YELLOW}Installing Drupal profile: ${PROFILE}...${NORMAL}\n"
-  #drush si --db-url=$DB_URL --account-pass="admin" ${PROFILE} $CONFIRM
+  drush si --db-url=$DB_URL --account-pass="admin" ${PROFILE} $CONFIRM
 fi
 
 # Fix permissions after install

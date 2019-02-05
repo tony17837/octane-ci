@@ -32,6 +32,7 @@ cache:
     - docroot
     - vendor
     - node_modules
+    - composer.lock
 
 before_script:
   # Dump some debugging so we know what variables and values we have to work with
