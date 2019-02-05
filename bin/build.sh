@@ -6,7 +6,7 @@ source ~/.profile
 
 # Install project requirements.
 composer clear-cache
-COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install
+COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi
 
 # Build the theme
 THEME_PATH="src/themes/particle"

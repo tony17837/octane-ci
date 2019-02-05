@@ -12,7 +12,7 @@ CURRENT_DIR=${PWD}
 #
 # Uncomment the following command if you want to ABORT building if patches
 # fail to apply.
-composer install
+composer install --ansi
 
 # Build the theme
 cd src/themes/particle && npm run build:drupal
