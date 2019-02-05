@@ -8,11 +8,11 @@ source ~/.profile
 
 # Uncomment the following command if you want to continue building if patches
 # fail to apply.
-COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi
+COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi --no-suggest
 #
 # Uncomment the following command if you want to ABORT building if patches
 # fail to apply.
-# COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi
+# COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest
 
 # Build the theme
 THEME_PATH="src/themes/particle"
