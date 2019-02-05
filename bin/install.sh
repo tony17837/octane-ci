@@ -2,6 +2,9 @@
 # Install the Drupal site.
 # Runs in the web container, so only use drush commands, no other tools.
 
+YELLOW="\033[0;33m"
+NORMAL="\033[0;0m"
+
 # Parse comment line arguments
 CONFIRM=''
 if [ ! -z "$CI" ]; then
@@ -36,11 +39,11 @@ cd /var/www/docroot
 # Install Drupal site
 if [ -e "src/config/default/system.site.yml" ]; then
   # If config exists, install using it.
-  echo "Installing Drupal from existing config..."
+  printf "${YELLOW}Installing Drupal from existing config...${NORMAL}\n"
   drush si --db-url=$DB_URL --account-pass="admin" --existing-config $CONFIRM
 else
   # Otherwise install clean from profile.
-  echo "Installing Drupal profile: ${PROFILE}..."
+  printf "${YELLOW}Installing Drupal profile: ${PROFILE}...${NORMAL}\n"
   drush si --db-url=$DB_URL --account-pass="admin" ${PROFILE} $CONFIRM
 fi
 
