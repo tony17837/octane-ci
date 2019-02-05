@@ -127,7 +127,7 @@ install:
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh -y
   only:
     - /^master/
   when: manual

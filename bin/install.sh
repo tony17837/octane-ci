@@ -7,9 +7,6 @@ NORMAL="\033[0;0m"
 
 # Parse comment line arguments
 CONFIRM=''
-if [ ! -z "$CI" ]; then
-  CONFIRM='-y'
-fi
 while [[ $# -gt 0 ]]; do
   case $1 in
     -y)
@@ -22,7 +19,6 @@ while [[ $# -gt 0 ]]; do
     ;;
   esac
 done
-echo "Installing Drupal ${CONFIRM}"
 
 if [ -z "$PROFILE" ]; then
   # Default install profile is Acquia Lightning.
@@ -40,11 +36,11 @@ cd /var/www/docroot
 if [ -e "src/config/default/system.site.yml" ]; then
   # If config exists, install using it.
   printf "${YELLOW}Installing Drupal from existing config...${NORMAL}\n"
-  drush si --db-url=$DB_URL --account-pass="admin" --existing-config $CONFIRM
+  #drush si --db-url=$DB_URL --account-pass="admin" --existing-config $CONFIRM
 else
   # Otherwise install clean from profile.
   printf "${YELLOW}Installing Drupal profile: ${PROFILE}...${NORMAL}\n"
-  drush si --db-url=$DB_URL --account-pass="admin" ${PROFILE} $CONFIRM
+  #drush si --db-url=$DB_URL --account-pass="admin" ${PROFILE} $CONFIRM
 fi
 
 # Fix permissions after install
