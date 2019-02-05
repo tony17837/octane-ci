@@ -30,6 +30,8 @@ cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
     - docroot
+    - vendor
+    - node_modules
 
 before_script:
   # Dump some debugging so we know what variables and values we have to work with
