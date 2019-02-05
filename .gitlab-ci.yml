@@ -1,4 +1,4 @@
-image: outrigger/gitlab-ci-workspace:helm
+image: outrigger/gitlab-ci-workspace:stable
 
 services:
   - docker:stable-dind
