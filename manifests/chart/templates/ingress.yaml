@@ -1,0 +1,22 @@
+---
+# Source: chart/templates/ingress.yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: release-name-chart
+  labels:
+    app: chart
+    chart: chart-0.1.0
+    release: release-name
+    heritage: Tiller
+  annotations:
+      kubernetes.io/ingress.class: "traefik"
+spec:
+  rules:
+    - host: www...kube.p2devcloud.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: release-name-chart
+              servicePort: 80

@@ -1,0 +1,17 @@
+---
+# Source: chart/templates/pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: release-name-chart-files
+  labels:
+    app: release-name-chart
+    chart: "chart-0.1.0"
+    release: "release-name"
+    heritage: "Tiller"
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "1Gi"

@@ -1,0 +1,21 @@
+---
+# Source: chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: release-name-chart
+  labels:
+    app: chart
+    chart: chart-0.1.0
+    release: release-name
+    heritage: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app: chart
+    release: release-name
