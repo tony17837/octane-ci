@@ -54,7 +54,7 @@ before_script:
     - helm dependency build .gitlab-ci/chart
     # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
     - helm version
-    - helm template --output-dir .gitlab-ci/manifests --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
+    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
     - kubectl apply --recursive --filename .gitlab-ci/manifests
     - echo "Watching rollout status"
     - date
@@ -103,6 +103,7 @@ deploy_master:
   variables:
     PROJECT_ENV: dev
     PROJECT_TIER: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
   <<: *deploy_script
   environment:
     name: ${PROJECT_ENV}
