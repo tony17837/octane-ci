@@ -26,5 +26,5 @@ if [ ! -z "$DRUPAL_DB" ]; then
 
 else
   # If we don't have a Drupal site, install it now.
-  ./install.sh "$@"
+  /var/www/bin/install.sh "$@"
 fi
