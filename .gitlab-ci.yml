@@ -50,10 +50,10 @@ before_script:
     # https://gitlab.com/help/user/project/deploy_tokens/index#read-container-registry-images
     - kubectl get secret gitlab-registry-secret || kubectl create secret docker-registry gitlab-registry-secret --docker-server=${CI_REGISTRY} --docker-username=${CI_DEPLOY_USER} --docker-password=${CI_DEPLOY_PASSWORD} --docker-email=${GITLAB_USER_EMAIL}
     # Download chart dependencies
-    - helm dependency build ./.gitlab-ci/chart
+    - helm dependency build .gitlab-ci/chart
     # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
-    - helm template --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug --output-dir ./.gitlab-ci/manifests ./.gitlab-ci/chart
-    - kubectl apply --recursive --filename ./.gitlab-ci/manifests
+    - helm template --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug --output-dir=.gitlab-ci/manifests .gitlab-ci/chart
+    - kubectl apply --recursive --filename .gitlab-ci/manifests
     - echo "Watching rollout status"
     - date
     - kubectl get pods
