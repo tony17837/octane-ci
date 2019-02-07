@@ -14,6 +14,8 @@ $config_directories = array(
   CONFIG_SYNC_DIRECTORY => '/var/www/src/config/default'
 );
 
+// Use environment variables for database credentials.
+// These are passed into the docker web and db containers.
 $databases['default']['default'] = array (
   'database' => getenv('MYSQL_DATABASE'),
   'username' => getenv('MYSQL_USER'),

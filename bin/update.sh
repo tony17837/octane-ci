@@ -5,8 +5,9 @@
 YELLOW="\033[0;33m"
 NORMAL="\033[0;0m"
 
-DRUPAL_DB=`drush status --fields=db-hostname`
-if [ ! -z "$DRUPAL_DB" ]; then
+# Check to see if Drupal is already installed.
+DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
+if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 
   # Clear cache before updates.
   printf "${YELLOW}Clearing cache...${NORMAL}\n"
