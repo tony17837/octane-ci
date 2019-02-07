@@ -7,6 +7,8 @@ YELLOW="\033[0;33m"
 NORMAL="\033[0;0m"
 
 # Install project dependencies from composer.
+ls -al
+ls -al vendor
 
 printf "${YELLOW}Running Composer...${NORMAL}\n"
 # Uncomment the following command if you want to continue building if patches
