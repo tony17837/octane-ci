@@ -81,6 +81,7 @@ before_script:
 build:
   stage: build
   script:
+    - ps aux
     - ls -al
     #- cat composer.lock
     # Login so we can push images to the registry
