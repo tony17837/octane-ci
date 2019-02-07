@@ -78,20 +78,12 @@ before_script:
 build:
   stage: build
   script:
-    - docker info
-    - ls -al
-    #- cat composer.lock
     # Login so we can push images to the registry
-    - echo ${CI_JOB_TOKEN}
-    - echo ${CI_REGISTRY}
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
-    - ls -al
     # assemble the codebase
-    #- docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
+    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile .
-    - echo "Composer Test" > composer.lock
     # Use previous build as cache for performance.
     - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
     # Tag it based on slug (branch name) too which can allow for easier commands
@@ -123,7 +115,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-  when: manual
+#  when: manual
 
 update:
   stage: update
@@ -136,7 +128,7 @@ update:
     - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update.sh -y
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 install:
   stage: tasks
@@ -149,7 +141,7 @@ install:
     - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh -y
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 run_tests:
   stage: test
@@ -162,7 +154,7 @@ run_tests:
     - ./.gitlab-ci/web-container-exec.sh composer test
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 clean_up_environment:
   stage: tasks
