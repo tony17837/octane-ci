@@ -82,7 +82,7 @@ build:
   stage: build
   script:
     - ls -al
-    - cat composer.lock
+    #- cat composer.lock
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
