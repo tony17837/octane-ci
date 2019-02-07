@@ -82,7 +82,11 @@ build:
     - ls -al
     #- cat composer.lock
     # Login so we can push images to the registry
+    - echo ${CI_JOB_TOKEN}
+    - echo ${CI_REGISTRY}
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - ls -al
     # assemble the codebase
     #- docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
     # bundle it into a docker image
