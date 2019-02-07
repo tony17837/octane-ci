@@ -16,7 +16,7 @@ variables:
   WEB_IMAGE: ${CI_REGISTRY_IMAGE}/web
   # Test faster file system driver
   # see https://docs.gitlab.com/ce/ci/docker/using_docker_build.html#using-the-overlayfs-driver
-  DOCKER_DRIVER: overlay2
+  #DOCKER_DRIVER: overlay2
 
 stages:
   # tasks are intended for items which are only run manually and don't need
@@ -81,9 +81,7 @@ before_script:
 build:
   stage: build
   script:
-    - ps -eaf
     - docker info
-    - ls -al /var/lib/docker
     - ls -al
     #- cat composer.lock
     # Login so we can push images to the registry
