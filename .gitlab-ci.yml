@@ -52,9 +52,13 @@ before_script:
     - kubectl get secret gitlab-registry-secret || kubectl create secret docker-registry gitlab-registry-secret --docker-server=${CI_REGISTRY} --docker-username=${CI_DEPLOY_USER} --docker-password=${CI_DEPLOY_PASSWORD} --docker-email=${GITLAB_USER_EMAIL}
     # Download chart dependencies
     - helm dependency build .gitlab-ci/chart
-    # Do the deployment and print out all the YAML resources deployed for this release. (good for debugging)
+    # Do the deployment and output all the YAML resources deployed for this release.
     - helm version
-    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
+    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} -set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
+    # Remove un-needed mariadb-test pod.
+    - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/test-runner.yaml
+    - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/tests.yaml
+    # Send helm manifests to kubectl to create/update the pods.
     - kubectl apply --recursive --filename .gitlab-ci/manifests
     - echo "Watching rollout status"
     - date
@@ -96,7 +100,7 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
-  when: manual
+#  when: manual
 
 deploy_master:
   stage: deploy
@@ -110,7 +114,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-  when: manual
+#  when: manual
 
 update:
   stage: update
@@ -123,7 +127,7 @@ update:
     - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update.sh -y
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 install:
   stage: tasks
@@ -149,7 +153,7 @@ run_tests:
     - ./.gitlab-ci/web-container-exec.sh composer test
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 clean_up_environment:
   stage: tasks
