@@ -14,6 +14,9 @@ variables:
   # multiple images which may need to be built. However, the majority are
   # expected to only ever need to build one image.
   WEB_IMAGE: ${CI_REGISTRY_IMAGE}/web
+  # Test faster file system driver
+  # see https://docs.gitlab.com/ce/ci/docker/using_docker_build.html#using-the-overlayfs-driver
+  DOCKER_DRIVER: overlay2
 
 stages:
   # tasks are intended for items which are only run manually and don't need
@@ -29,9 +32,9 @@ stages:
 cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
-    - docroot
-    - vendor
-    - node_modules
+    - docroot/
+    - vendor/
+    - node_modules/
     - composer.lock
 
 before_script:
@@ -54,7 +57,7 @@ before_script:
     - helm dependency build .gitlab-ci/chart
     # Do the deployment and output all the YAML resources deployed for this release.
     - helm version
-    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} -set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
+    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
     # Remove un-needed mariadb-test pod.
     - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/test-runner.yaml
     - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/tests.yaml
@@ -92,11 +95,12 @@ build:
     - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile .
-    - docker build -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
+    # Use previous build as cache for performance.
+    - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
     # Tag it based on slug (branch name) too which can allow for easier commands
     # of the form "deploy the latest version of BRANCH"
     - docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
-    # Push all the plain tags and the qa variants
+    # Push all the plain tags and the qa variants and for cache
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
