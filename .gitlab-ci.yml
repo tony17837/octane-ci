@@ -81,7 +81,9 @@ before_script:
 build:
   stage: build
   script:
-    - ps aux
+    - ps -eaf
+    - docker info
+    - ls -al /var/lib/docker
     - ls -al
     #- cat composer.lock
     # Login so we can push images to the registry
@@ -97,6 +99,7 @@ build:
     # of the form "deploy the latest version of BRANCH"
     - docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # Push all the plain tags and the qa variants and for cache
+    - ls -al /var/lib/docker
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
