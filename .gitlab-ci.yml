@@ -29,14 +29,6 @@ stages:
   - update
   - test
 
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    - docroot/
-    - vendor/
-    - node_modules/
-    - composer.lock
-
 before_script:
   # Dump some debugging so we know what variables and values we have to work with
   - set
@@ -89,12 +81,15 @@ before_script:
 build:
   stage: build
   script:
+    - ls -al
+    - cat composer.lock
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
+    #- docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile .
+    - echo "Composer Test" > composer.lock
     # Use previous build as cache for performance.
     - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
     # Tag it based on slug (branch name) too which can allow for easier commands
@@ -104,6 +99,14 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - docroot/
+      - vendor/
+      - node_modules/
+      - composer.lock
+
 #  when: manual
 
 deploy_master:
@@ -118,7 +121,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-#  when: manual
+  when: manual
 
 update:
   stage: update
@@ -131,7 +134,7 @@ update:
     - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update.sh -y
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 install:
   stage: tasks
@@ -157,7 +160,7 @@ run_tests:
     - ./.gitlab-ci/web-container-exec.sh composer test
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 clean_up_environment:
   stage: tasks
