@@ -1,0 +1,8 @@
+#!/bin/bash
+#: exec_target = cli
+## Performed after doing work and before doing a commit/push.
+
+cd ${DOCROOT}
+
+printf "${INFO_SLUG}Exporting configuration...\n"
+drush config-export

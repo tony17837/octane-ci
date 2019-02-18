@@ -8,4 +8,4 @@
 bin/build
 
 # Run updates, clear cache, etc.
-bin/refresh
+bin/import

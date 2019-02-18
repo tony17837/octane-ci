@@ -3,6 +3,7 @@
 # This runs within the Build/CLI container but BEFORE the project is built.
 #: exec_target = cli
 
+printf "${INFO_SLUG}Checking PHP Code style...\n"
 # PHPCS here
 vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer/
 vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
@@ -11,5 +12,6 @@ vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
   project/config project/profiles project/modules project/themes
 
 # Lint the front-end.
+printf "${INFO_SLUG}Checking Theme style...\n"
 cd ${THEME_PATH}
 npm run lint:all
