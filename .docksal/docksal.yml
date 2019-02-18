@@ -18,6 +18,9 @@ services:
       - MYSQL_PORT
       # Adjust IDE Config for xdebug to work on command line PHP scripts.
       - PHP_IDE_CONFIG=serverName=${VIRTUAL_HOST}
+    env_file:
+      # Pass project-specific environment variables into cli container.
+      - ../.env
 
   web:
     environment:

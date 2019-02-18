@@ -6,4 +6,5 @@
 # Init the tools like npm within the cli container
 source ~/.profile
 
-drush status
+env
+#drush status

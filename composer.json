@@ -117,7 +117,7 @@
             "build/docroot/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
-            "project/themes/{$name}": [
+            "build/docroot/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
             ],
             "build/docroot/drush/contrib/{$name}": [
@@ -125,15 +125,15 @@
             ]
         },
         "symlinks": {
-            "project/modules": "build/docroot/modules/custom",
-            "project/themes": "build/docroot/themes/custom",
-            "project/profiles": "build/docroot/profiles/custom",
-            "project/libraries": "build/docroot/libraries/custom",
-            "project/sites/default": "build/docroot/sites/default",
-            "project/sites/settings.common.php": "build/docroot/sites/settings.common.php",
-            "project/sites/settings.common-client.php": "build/docroot/sites/settings.common-client.php",
-            "project/sites/settings.common-local.php": "build/docroot/sites/settings.common-local.php",
-            "project/sites/settings.memcache.php": "build/docroot/sites/settings.memcache.php"
+            "project/modules": "$DOCROOT/modules/custom",
+            "project/themes": "$DOCROOT/themes/custom",
+            "project/profiles": "$DOCROOT/profiles/custom",
+            "project/libraries": "$DOCROOT/libraries/custom",
+            "project/sites/default": "$DOCROOT/sites/default",
+            "project/sites/settings.common.php": "$DOCROOT/sites/settings.common.php",
+            "project/sites/settings.common-client.php": "$DOCROOT/sites/settings.common-client.php",
+            "project/sites/settings.common-local.php": "$DOCROOT/sites/settings.common-local.php",
+            "project/sites/settings.memcache.php": "$DOCROOT/sites/settings.memcache.php"
         }
     }
 }
