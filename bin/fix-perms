@@ -11,7 +11,7 @@
 #: exec_target = cli
 
 echo "Fixing up file permissions for development..."
-echo "You can run this via 'fin exec bin/fix-perms.sh'"
+echo "You can run this via 'fin exec bin/fix-perms'"
 set -x
 # Ensure Apache manages the files directory.
 chown -R apache:apache /var/www/${PROJECT_DIR}sites/default/files

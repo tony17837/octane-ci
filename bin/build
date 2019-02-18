@@ -2,6 +2,7 @@
 # This runs within the CLI container, so all tools are available.
 #: exec_target = cli
 
+printf "${YELLOW}Installing composer dependencies...${NORMAL}\n"
 # Install project dependencies from composer.
 # Uncomment the following command if you want to continue building if patches
 # fail to apply.
@@ -14,11 +15,13 @@ COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi
 # Build the theme
 if [ -e ${THEME_PATH} ]; then
   # Theme exists, so rebuild it.
+  printf "${YELLOW}Rebuilding theme...${NORMAL}\n"
   cd ${THEME_PATH}
   npm install
   npm run build:drupal
 else
   # If theme doesn't exist, go install Particle
+  printf "${YELLOW}Installing Particle...${NORMAL}\n"
   bin/particle
 fi
 
