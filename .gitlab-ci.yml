@@ -78,7 +78,7 @@ before_script:
   when: manual
 
 validate:
-  stage: task
+  stage: tasks
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
