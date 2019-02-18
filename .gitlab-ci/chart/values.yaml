@@ -27,7 +27,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: traefik
 env:
-  docroot: /var/www/docroot
+  docroot: /var/www/build/docroot
   phpMaxExecutionTime: 60
   # Note: This only affects PHP memory in Apache.  To change PHP command line
   # change the .gitlab-ci/99-project-php-settings.ini file
@@ -56,7 +56,7 @@ persistence:
 ## Setting volumeMounts.apache.mountPath to "" prevents Apache config mount.
 volumeMounts:
   cmsfiles:
-    mountPath: /var/www/docroot/sites/default/files
+    mountPath: /var/www/build/docroot/sites/default/files
 
 ##
 ## MariaDB sub-chart configuration

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Run the Unit Tests for the project.
+# These tests run after the site has been built, but before it is installed.
+# This runs in the Build/CLI container where all the tools are available.
+#: exec_target = cli
+
+# Init the tools like npm within the cli container
+source ~/.profile
+
+composer test

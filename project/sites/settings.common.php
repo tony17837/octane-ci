@@ -11,7 +11,7 @@ $conf['cron_safe_threshold'] = 0;
 
 // Location of config for import/export.
 $config_directories = array(
-  CONFIG_SYNC_DIRECTORY => '/var/www/src/config/default'
+  CONFIG_SYNC_DIRECTORY => '/var/www/project/config/default'
 );
 
 // Use environment variables for database credentials.

@@ -21,10 +21,12 @@ stages:
   # are always skipped in any automatic activities but come before a build so
   # that if it fails it doesn't effect the ability to run a task
   - tasks
+  - validate
   - build
+  - test_unit
   - deploy
   - update
-  - test
+  - test_web
 
 before_script:
   # Dump some debugging so we know what variables and values we have to work with
@@ -75,13 +77,26 @@ before_script:
     - helm delete --purge ${RELEASE_NAME}
   when: manual
 
+validate:
+  stage: task
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/validate
+  only:
+    - /^master/
+  when: manual
+
 build:
   stage: build
   script:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build.sh
+    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/build
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile .
     # Use previous build as cache for performance.
@@ -96,11 +111,24 @@ build:
   cache:
     key: "$CI_COMMIT_REF_SLUG"
     paths:
-      - docroot/
+      - build/
       - vendor/
       - node_modules/
       - composer.lock
 
+#  when: manual
+
+test_unit:
+  stage: test_unit
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - docker-compose -f .gitlab-ci/codebase-build.yml run --rm base ./bin/test-unit
+  only:
+    - /^master/
 #  when: manual
 
 deploy_master:
@@ -125,7 +153,7 @@ update:
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update.sh -y
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/update -y
   only:
     - /^master/
 #  when: manual
@@ -138,20 +166,20 @@ install:
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install.sh -y
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/install -y
   only:
     - /^master/
 #  when: manual
 
-run_tests:
-  stage: test
+test_web:
+  stage: test_web
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/web-container-exec.sh composer test
+    - ./.gitlab-ci/web-container-exec.sh /var/www/bin/test-web
   only:
     - /^master/
 #  when: manual

@@ -41,7 +41,7 @@ services:
 # Optional Memcached service.
 # Uncomment if needed (or replace with Redis)
 # Requires installing the memcache module for Drupal,
-# then edit src/sites/settings.common.php to enable memcache config.
+# then edit project/sites/settings.common.php to enable memcache config.
 #  memcached:
 #    extends:
 #      file: ${HOME}/.docksal/stacks/services.yml

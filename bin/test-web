@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Run tests for project.
+# This is for functional/behavior tests that run after the site is installed.
+# This is run within the Build/CLI container, so has all the tools.
+#: exec_target = cli
+
+# Init the tools like npm within the cli container
+source ~/.profile
+
+# Run tests
+echo "Running Web tests..."

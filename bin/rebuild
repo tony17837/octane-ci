@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Rebuild the site and theme.  Used after doing "git pull" as part of
+# daily workflow.
+# Runs in the Build container, so all tools are available.
+#: exec_target = cli
+
+# Build composer, build theme, etc.
+bin/build
+
+# Run updates, clear cache, etc.
+bin/refresh
