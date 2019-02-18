@@ -14,3 +14,6 @@ services:
       CI_COMMIT_HASH: "${CI_BUILD_REF}"
       CI_BRANCH: "${CI_BUILD_REF_NAME}"
       NVM_DIR: /home/docker/.nvm
+    env_file:
+      # Pass project-specific environment variables into cli container.
+      - ../.env

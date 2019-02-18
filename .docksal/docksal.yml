@@ -7,39 +7,22 @@ services:
       - io.docksal.virtual-port=8080
     expose:
       - "8080"
+    env_file:
+      # Pass project-specific environment variables into cli container.
+      - ../.env
     environment:
-      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
-      - DOCKER_ENV
-      # Pass environment variables from docksal.env into container
-      - MYSQL_DATABASE
-      - MYSQL_PASSWORD
-      - MYSQL_USER
-      - MYSQL_HOST
-      - MYSQL_PORT
       # Adjust IDE Config for xdebug to work on command line PHP scripts.
       - PHP_IDE_CONFIG=serverName=${VIRTUAL_HOST}
+
+  web:
     env_file:
       # Pass project-specific environment variables into cli container.
       - ../.env
 
-  web:
-    environment:
-      # Include the DOCKER_ENV so Drupal settings can be aware of environment.
-      - DOCKER_ENV
-      # Pass environment variables from docksal.env into container
-      - MYSQL_DATABASE
-      - MYSQL_PASSWORD
-      - MYSQL_USER
-      - MYSQL_HOST
-      - MYSQL_PORT
-
   db:
-    environment:
-      # override the default database name
-      # Pass environment variables from docksal.env into container
-      - MYSQL_DATABASE
-      - MYSQL_PASSWORD
-      - MYSQL_USER
+    env_file:
+      # Pass project-specific environment variables into cli container.
+      - ../.env
 
 # Optional Memcached service.
 # Uncomment if needed (or replace with Redis)

@@ -2,6 +2,9 @@
 # This runs within the CLI container, so all tools are available.
 #: exec_target = cli
 
+# Init the tools like npm within the cli container
+source ~/.profile
+
 printf "$INFO_SLUG Installing composer dependencies...\n"
 # Install project dependencies from composer.
 # Uncomment the following command if you want to continue building if patches
