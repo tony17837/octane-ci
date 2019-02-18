@@ -61,7 +61,7 @@
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "autoload-dev": {
-        "psr-4": { "Octane\\Tests\\": "test/src/" }
+        "psr-4": { "Project\\Tests\\": "project/test/src/" }
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
@@ -76,7 +76,7 @@
             "@project-scaffold",
             "@drupal-scaffold"
         ],
-        "test:unit": "phpunit --printer '\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter'",
+        "test:unit": "phpunit -c project/tests/phpunit.xml --printer '\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter'",
         "test": [
             "@test:unit"
         ]

@@ -26,7 +26,7 @@ stages:
   - test_unit
   - deploy
   - update
-  - test_web
+  - test
 
 before_script:
   # Dump some debugging so we know what variables and values we have to work with.
@@ -120,7 +120,7 @@ test_unit:
   environment:
     name: ${PROJECT_ENV}
   script:
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test-unit
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
 #  when: manual
@@ -165,15 +165,15 @@ install:
     - /^master/
   when: manual
 
-test_web:
-  stage: test_web
+test:
+  stage: test
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/exec-web.sh /var/www/bin/test-web
+    - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/
 #  when: manual

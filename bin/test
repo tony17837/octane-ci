@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Run tests for project.
+# This is for functional/behavior tests that run after the site is installed.
+# This is run within the Build/CLI container, so has all the tools.
+#: exec_target = cli
+
+# Init the tools like npm within the cli container
+source ~/.profile
+
+if [[ ! -z "$1" && -z "$2" ]]; then
+  # Single argument is testsuite.
+  printf "$INFO_SLUG Running $1 tests...\n"
+  composer test -- --testsuite $1
+elif [ ! -z "$2" ]; then
+  # Multiple arguments, pass to phpunit.
+  printf "$INFO_SLUG Running tests...\n"
+  composer test -- $@
+else
+  # Run all non-unit tests.
+  # Unit tests are run in a separate job before the build is deployed.
+  printf "$INFO_SLUG Running Kernel tests...\n"
+  composer test -- --testsuite kernel
+  printf "$INFO_SLUG Running Functional tests...\n"
+  composer test -- --testsuite functional
+  printf "$INFO_SLUG Running Functional-Javascript tests...\n"
+  composer test -- --testsuite functional-javascript
+  printf "$INFO_SLUG Running ExistingSite tests...\n"
+  composer test -- --testsuite existing-site
+fi
+
