@@ -61,7 +61,7 @@
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "autoload-dev": {
-        "psr-4": { "Project\\Tests\\": "project/test/src/" }
+        "psr-4": { "Octane\\Tests\\": "src/" }
     },
     "scripts": {
         "drupal-scaffold": "DrupalComposer\\DrupalScaffold\\Plugin::scaffold",
