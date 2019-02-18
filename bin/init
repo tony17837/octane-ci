@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# This script is only intended to be run via "fin"
+
+# Initialize stack.
+fin project start
+
+# Run the common init script within the cli container.
+fin exec bin/build.sh "$@"
+
+# Repeat here just to show the site URL when we are done.
+fin project start
