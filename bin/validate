@@ -8,7 +8,7 @@ vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer/
 vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
   --extensions="php,module,inc,install,test,profile,theme" \
   --ignore="*.features.*,*.pages*.inc" \
-  project/config project/profiles project/modules ${THEME_PATH}/apps/drupal
+  ${CONFIG_PATH} ${PROJECT_DIR}profiles ${PROJECT_DIR}modules ${PROJECT_DIR}themes
 
 # Lint the front-end.
 cd ${THEME_PATH}
