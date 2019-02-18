@@ -4,5 +4,5 @@
 
 cd ${DOCROOT}
 
-printf "${INFO_SLUG}Exporting configuration...\n"
+printf "$INFO_SLUG Exporting configuration...\n"
 drush config-export

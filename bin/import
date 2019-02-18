@@ -9,15 +9,19 @@ DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
 if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 
   # Clear cache before updates.
+  printf "$INFO_SLUG Clearing cache...\n"
   drush cr
 
   # Run any core or module update hooks.
+  printf "$INFO_SLUG Running update hooks...\n"
   drush updb -y
 
   # Import configuration. This will overwrite any local changes in your DB.
+  printf "$INFO_SLUG Importing config changes...\n"
   drush config-import -y
 
   # Need a clear-cache here in case new configuration is needed in theme.
+  printf "$INFO_SLUG Clearing cache...\n"
   drush cr
 
 else

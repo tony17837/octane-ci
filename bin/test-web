@@ -8,4 +8,4 @@
 source ~/.profile
 
 # Run tests
-echo "Running Web tests..."
+printf "$INFO_SLUG Running Web tests...\n"
