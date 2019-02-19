@@ -4,14 +4,26 @@
 #: exec_target = cli
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
-# PHPCS here
+# PHPCS here.
 vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer/
 vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
+  --colors \
   --extensions="php,module,inc,install,test,profile,theme" \
   --ignore="*.features.*,*.pages*.inc" \
-  project/config project/profiles project/modules project/themes
+  project/profiles project/modules ${THEME_PATH}/apps/drupal
 
-# Lint the front-end.
-printf "$INFO_SLUG Checking Theme style...\n"
+# Twig linting.
+printf "$INFO_SLUG Checking Twig style...\n"
+composer twig-lint lint ${THEME_PATH}/apps/drupal
+composer twig-lint lint ${THEME_PATH}/source
+
+# Front-end theme linting.
 cd ${THEME_PATH}
-npm run lint:all
+
+printf "$INFO_SLUG Checking Javascript style...\n"
+npm run lint:js
+
+printf "$INFO_SLUG Checking SCSS style...\n"
+npm run lint:scss
+
+
