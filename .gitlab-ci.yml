@@ -21,9 +21,8 @@ stages:
   # are always skipped in any automatic activities but come before a build so
   # that if it fails it doesn't effect the ability to run a task
   - tasks
-  - validate
   - build
-  - test_unit
+  - validate
   - deploy
   - update
   - test
@@ -71,19 +70,6 @@ before_script:
     - helm delete --purge ${RELEASE_NAME}
   when: manual
 
-validate:
-  stage: tasks
-  variables:
-    PROJECT_ENV: dev
-    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
-  environment:
-    name: ${PROJECT_ENV}
-  script:
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-  only:
-    - /^master/
-  when: manual
-
 build:
   stage: build
   script:
@@ -112,14 +98,15 @@ build:
 
 #  when: manual
 
-test_unit:
-  stage: test_unit
+validate:
+  stage: validate
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
   environment:
     name: ${PROJECT_ENV}
   script:
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/

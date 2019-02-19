@@ -7,6 +7,8 @@
 # Init the tools like npm within the cli container
 source ~/.profile
 
+echo "Path is: $PATH"
+
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
   printf "$INFO_SLUG Running $1 tests...\n"
