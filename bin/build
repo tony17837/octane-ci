@@ -15,16 +15,11 @@ COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi
 # fail to apply.
 # COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest
 
-# Build the theme
+# Build the theme if it exists.
 if [ -e ${THEME_PATH} ]; then
-  # Theme exists, so rebuild it.
   printf "$INFO_SLUG Rebuilding theme...\n"
   cd ${THEME_PATH}
   npm install
   npm run build:drupal
-else
-  # If theme doesn't exist, go install Particle
-  printf "$INFO_SLUG Installing Particle...\n"
-  bin/particle
 fi
 
