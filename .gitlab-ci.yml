@@ -76,7 +76,7 @@ build:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/build
+    - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile.web Dockerfile
     # Use previous build as cache for performance.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Scaffold the Octane-based project.
-# This script runs within the Build container, so all tools are available.
+# Script used in GitLab CI to build the site from scratch.
+# Should match the .octane/init.sh script used for Docksal local setup.
 
 printf "$INFO_SLUG Installing Particle...\n"
 ./bin/particle
