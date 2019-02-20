@@ -3,6 +3,9 @@
 # This runs within the Build/CLI container but BEFORE the project is built.
 #: exec_target = cli
 
+pwd
+ls -al
+
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
 vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer/
