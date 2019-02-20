@@ -96,7 +96,7 @@ build:
       - node_modules/
       - composer.lock
 
-#  when: manual
+  when: manual
 
 validate:
   stage: validate
@@ -110,7 +110,7 @@ validate:
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 deploy_master:
   stage: deploy
@@ -124,7 +124,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-#  when: manual
+  when: manual
 
 update:
   stage: update
@@ -135,19 +135,6 @@ update:
     name: ${PROJECT_ENV}
   script:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/update -y
-  only:
-    - /^master/
-#  when: manual
-
-install:
-  stage: tasks
-  variables:
-    PROJECT_ENV: dev
-    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
-  environment:
-    name: ${PROJECT_ENV}
-  script:
-    - ./.gitlab-ci/exec-web.sh /var/www/bin/install -y
   only:
     - /^master/
   when: manual
@@ -163,7 +150,20 @@ test:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/
-#  when: manual
+  when: manual
+
+install:
+  stage: tasks
+  variables:
+    PROJECT_ENV: dev
+    RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+  environment:
+    name: ${PROJECT_ENV}
+  script:
+    - ./.gitlab-ci/exec-web.sh /var/www/bin/install -y
+  only:
+    - /^master/
+  when: manual
 
 clean_up_environment:
   stage: tasks
