@@ -3,11 +3,6 @@
 # This runs within the Build/CLI container but BEFORE the project is built.
 #: exec_target = cli
 
-pwd
-ls -al
-echo "Performance test"
-time for i in {0..1000}; do echo 'test' > "test${i}.txt"; done
-
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
 PHPCS_PATHS="project/profiles project/modules"
@@ -23,8 +18,8 @@ vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
   ${PHPCS_PATHS}
 
 if [ -e ${THEME_PATH}/apps/drupal ]; then
-# Twig linting.
-printf "$INFO_SLUG Checking Twig style...\n"
+  # Twig linting.
+  printf "$INFO_SLUG Checking Twig style...\n"
   composer twig-lint lint ${THEME_PATH}/apps/drupal
   composer twig-lint lint ${THEME_PATH}/source
 
