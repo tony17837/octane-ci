@@ -9,3 +9,8 @@ cd /var/www
 # Copy any files needed from the container into /build.
 # For example, vendor, node_modules, etc.
 cp -R vendor /build
+
+# Only copy cached composer.lock if project doesn't already have one in repo.
+if [ ! -e composer.lock ]; then
+  cp composer.lock /build
+fi

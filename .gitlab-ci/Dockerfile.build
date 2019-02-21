@@ -3,7 +3,3 @@ FROM docksal/cli:2.4-php7.1
 
 # Add vendor bin to path to replicate local Docksal usage.
 ENV PATH=$PATH:/var/www/vendor/bin
-
-COPY composer.json
-COPY composer.lock
-RUN composer install
