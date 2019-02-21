@@ -11,6 +11,6 @@ cd /var/www
 cp -R vendor /build
 
 # Only copy cached composer.lock if project doesn't already have one in repo.
-if [ ! -e composer.lock ]; then
+if [ ! -f composer.lock ]; then
   cp composer.lock /build
 fi

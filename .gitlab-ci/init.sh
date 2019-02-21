@@ -7,9 +7,9 @@ ls -al
 ls -al vendor
 
 printf "$INFO_SLUG Installing Particle...\n"
-#./bin/particle
+./bin/particle
 
 printf "$INFO_SLUG Building site...\n"
 # Initial build of site.
-#./bin/build "$@"
+./bin/build "$@"
 
