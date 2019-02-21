@@ -105,7 +105,7 @@ validate:
   environment:
     name: ${PROJECT_ENV}
   image:
-    name: ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    name: registry.gitlab.com/phase2tech/octane-ci/web:master
     entrypoint: [""]
   script:
     # Login so we can push images to the registry
