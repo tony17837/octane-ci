@@ -12,7 +12,8 @@ cd /var/www
 # Only copy cached vendor if project doesn't already have one in repo.
 if [[ -e vendor  && ! -e /build/vendor ]]; then
   cp -R vendor /build
-  chmod -R 777 /build/vendor
+  # Make directories writeable so docker can access.
+  find /build/vendor -type d -exec chmod 777 {} \;
   ls -al /build
   ls -al /build/vendor/composer/
 fi
