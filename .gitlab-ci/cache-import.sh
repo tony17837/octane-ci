@@ -12,6 +12,7 @@ cd /var/www
 # Only copy cached vendor if project doesn't already have one in repo.
 if [[ -e vendor  && ! -e /build/vendor ]]; then
   cp -R vendor /build
+  chmod -R 777 /build/vendor
   ls -al /build
   ls -al /build/vendor/composer/
 fi
@@ -20,3 +21,5 @@ fi
 if [[ -e composer.lock && ! -e /build/composer.lock ]]; then
   cp composer.lock /build
 fi
+
+# find . -type d -exec chmod 777 {} \;
