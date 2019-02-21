@@ -7,6 +7,8 @@ cd /var/www
 
 # Preserve file and directory permissions in GitLab.
 umask 000
+echo "Display umask"
+umask
 
 # /build is the local host files directory.
 # Copy any files needed from the container into /build.
@@ -19,6 +21,12 @@ if [[ -e vendor  && ! -e /build/vendor ]]; then
   #find /build/vendor -type d -exec chmod 777 {} \;
   # Make files writeable so docker can access.
   #find /build/vendor -type f -exec chmod 666 {} \;
+  ls -al /build
+  ls -al /build/vendor/composer/
+  # Make directories writeable so docker can access.
+  find /build/vendor -type d -exec chmod 777 {} \;
+  # Make files writeable so docker can access.
+  find /build/vendor -type f -exec chmod 666 {} \;
   ls -al /build
   ls -al /build/vendor/composer/
 fi
