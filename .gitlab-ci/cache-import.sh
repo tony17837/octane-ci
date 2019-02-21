@@ -20,3 +20,5 @@ fi
 if [[ -e composer.lock && ! -e /build/composer.lock ]]; then
   cp composer.lock /build
 fi
+
+chown -R docker:docker /build
