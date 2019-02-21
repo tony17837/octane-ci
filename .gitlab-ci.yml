@@ -4,6 +4,8 @@ services:
   - docker:dind
 
 variables:
+  # Ensure fast file system is used for docker:dind
+  DOCKER_DRIVER: overlay2
   # PROJECT_NAME is ideally set in the CI/CD variables instead of declared here
   # PROJECT_NAME: PUT_PROJECT_NAME_HERE
 

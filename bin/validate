@@ -5,6 +5,8 @@
 
 pwd
 ls -al
+echo "Performance test"
+time for i in {0..1000}; do echo 'test' > "test${i}.txt"; done
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
