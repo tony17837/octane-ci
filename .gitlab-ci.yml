@@ -106,6 +106,7 @@ validate:
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
+  when: manual
 
 deploy_master:
   stage: deploy
