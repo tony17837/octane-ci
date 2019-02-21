@@ -1,0 +1,43 @@
+##
+# Build container for CI environment
+##
+version: '2.1'
+
+services:
+  export:
+    extends:
+      service: base
+    command: /bin/bash
+    entrypoint: [ "/var/www/.gitlab-ci/cache-export.sh" ]
+    volumes:
+      - rig-sync-volume:/opt/cache
+
+  import:
+    extends:
+      service: base
+    command: /bin/bash
+    entrypoint: [ "/var/www/.gitlab-ci/cache-import.sh" ]
+    volumes:
+      - rig-sync-volume:/opt/cache
+
+  composer:
+    extends:
+      service: base
+    entrypoint: [ "/init", "composer", "--ansi" ]
+    command: ""
+  base:
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    working_dir: /var/www
+    volumes:
+      - ..:/var/www
+    environment:
+      GIT_USER_EMAIL: "GitLab"
+      GIT_USER_NAME: "gitlab@phase2technology.com"
+      CI_COMMIT_HASH: "${CI_BUILD_REF}"
+      CI_BRANCH: "${CI_BUILD_REF_NAME}"
+      NVM_DIR: /home/docker/.nvm
+    env_file:
+      # Pass project-specific environment variables into cli container.
+      - ../.env

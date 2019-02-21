@@ -1,0 +1,5 @@
+# This Dockfile is used to cache /vendor and /node_modules.
+FROM outrigger/apache-php:php71
+
+COPY /opt/cache/vendor vendor
+COPY /opt/cache/composer.lock composer.lock
