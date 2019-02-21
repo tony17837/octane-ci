@@ -3,6 +3,9 @@
 # This script runs within the Build container, so all tools are available.
 #: exec_target = cli
 
+# Init the tools like npm within the cli container
+source ~/.profile
+
 # Only download particle theme if it doesn't already exist.
 if [ ! -e ${THEME_PATH} ]; then
   printf "$INFO_SLUG Installing Particle...\n"

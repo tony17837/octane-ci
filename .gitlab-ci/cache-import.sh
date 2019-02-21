@@ -12,6 +12,8 @@ cd /var/www
 # Only copy cached vendor if project doesn't already have one in repo.
 if [[ -e vendor  && ! -e /build/vendor ]]; then
   cp -R vendor /build
+  ls -al vendor/composer/
+  ls -al /build/vendor/composer/
 fi
 
 # Only copy cached composer.lock if project doesn't already have one in repo.
