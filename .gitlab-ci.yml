@@ -104,13 +104,17 @@ validate:
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
   environment:
     name: ${PROJECT_ENV}
+  image:
+    name: ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    entrypoint: [""]
   script:
     # Login so we can push images to the registry
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
     - ls -al
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    #- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    #- docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
+    #- ls -al
+    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    # docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
   when: manual
