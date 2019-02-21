@@ -5,12 +5,15 @@
 
 cd /var/www
 
+ls -al
+ls -al /build
+
 # /build is the local host files directory.
 # Copy any files needed from the container into /build.
 # For example, vendor, node_modules, etc.
 cp -R vendor /build
 
 # Only copy cached composer.lock if project doesn't already have one in repo.
-if [ ! -f composer.lock ]; then
+if [ ! -f /build/composer.lock ]; then
   cp composer.lock /build
 fi
