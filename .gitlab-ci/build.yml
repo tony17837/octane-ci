@@ -5,9 +5,10 @@ version: '2.1'
 
 services:
   base:
-    build:
-      context: .
-      dockerfile: Dockerfile.build
+    image: docksal/cli:2.6-php7.1
+#    build:
+#      context: .
+#      dockerfile: Dockerfile.build
     working_dir: /var/www
     volumes:
       - ..:/var/www

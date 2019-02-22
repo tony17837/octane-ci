@@ -116,8 +116,9 @@ validate:
     - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
     - ls -al
     - ls -al vendor/bin
+    - ls -al vendor/squizlabs/php_codesniffer/bin
     - ./bin/validate
-    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
