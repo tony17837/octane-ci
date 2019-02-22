@@ -4,10 +4,6 @@
 
 cd /var/www
 
-ls -al
-ls -al vendor
-ls -al /var/www/vendor/composer
-
 # Install Particle
 #./bin/particle
 
