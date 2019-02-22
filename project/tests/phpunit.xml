@@ -42,9 +42,9 @@
   </php>
   <testsuites>
     <testsuite name="unit">
-      <directory>../modules/*/tests/src/Unit</directory>
-      <directory>../profiles/*/tests/src/Unit</directory>
-      <directory>../sites/*/modules/*/tests/src/Unit</directory>
+      <directory>project/modules/*/tests/src/Unit</directory>
+      <directory>project/profiles/*/tests/src/Unit</directory>
+      <directory>project/sites/*/modules/*/tests/src/Unit</directory>
     </testsuite>
     <testsuite name="kernel">
       <directory>../modules/*/tests/src/Kernel</directory>
