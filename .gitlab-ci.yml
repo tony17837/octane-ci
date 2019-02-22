@@ -90,7 +90,7 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
-  when: manual
+#  when: manual
 
 validate:
   stage: validate
@@ -106,7 +106,7 @@ validate:
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 deploy_master:
   stage: deploy
@@ -120,7 +120,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-  when: manual
+#  when: manual
 
 update:
   stage: update
@@ -133,7 +133,7 @@ update:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/update -y
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 test:
   stage: test
@@ -146,7 +146,7 @@ test:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 install:
   stage: tasks
