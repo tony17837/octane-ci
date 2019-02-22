@@ -100,7 +100,7 @@ build:
 
 validate:
   stage: validate
-  image: outrigger/gitlab-ci-workspace:stable
+  image: docksal/cli:2.6-php7.1
   services:
     - docker:dind
   variables:
@@ -114,8 +114,8 @@ validate:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
     - ls -al
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
   when: manual
