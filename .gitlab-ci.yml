@@ -76,7 +76,7 @@ build:
   stage: build
   script:
     # Prime the cache
-    - ./.gitlab-ci/cache.prime.sh
+    - ./.gitlab-ci/cache-prime.sh
     # assemble the codebase
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
@@ -101,7 +101,7 @@ validate:
     name: ${PROJECT_ENV}
   script:
     # Prime the cache
-    - ./.gitlab-ci/cache.prime.sh
+    - ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
   only:
