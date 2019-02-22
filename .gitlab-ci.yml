@@ -83,6 +83,7 @@ build:
     - ls -al
     - ls -al vendor
     - ls -al vendor/composer
+    - .gitlab-ci/init.sh
     # assemble the codebase
     ##- docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image

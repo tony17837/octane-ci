@@ -7,11 +7,10 @@ source ~/.profile
 
 printf "$INFO_SLUG Installing composer dependencies...\n"
 composer -V
-composer global remove hirak/prestissimo
 # Install project dependencies from composer.
 # Uncomment the following command if you want to continue building if patches
 # fail to apply.
-COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 COMPOSER_CACHE_DIR=/dev/null composer install --ansi --no-suggest --profile -vvv
+COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi --no-suggest --profile -vvv
 #
 # Uncomment the following command if you want to ABORT building if patches
 # fail to apply.
