@@ -7,6 +7,7 @@ source ~/.profile
 
 printf "$INFO_SLUG Installing composer dependencies...\n"
 composer -V
+composer global remove hirak/prestissimo
 # Install project dependencies from composer.
 # Uncomment the following command if you want to continue building if patches
 # fail to apply.
