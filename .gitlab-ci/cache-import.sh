@@ -13,9 +13,9 @@ cd /var/www
 if [[ -e vendor  && ! -e /build/vendor ]]; then
   cp -R vendor /build
   # Make directories writeable so docker can access.
-  find /build/vendor -type d -exec chmod 777 {} \;
+  find /build/vendor -type d -exec chmod a+w {} \;
   # Make files writeable so docker can access.
-  find /build/vendor -type f -exec chmod 666 {} \;
+  find /build/vendor -type f -exec chmod a+w {} \;
   ls -al /build
   ls -al /build/vendor/composer/
   ls -al /build/vendor/bin
