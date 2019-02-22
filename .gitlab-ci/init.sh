@@ -7,7 +7,7 @@ ls -al vendor
 ls -al /var/www/vendor/composer
 
 # Install Particle
-./bin/particle
+#./bin/particle
 
 # Initial build of site.
 ./bin/build "$@"
