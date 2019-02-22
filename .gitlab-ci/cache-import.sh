@@ -12,10 +12,6 @@ cd /var/www
 # Only copy cached vendor if project doesn't already have one in repo.
 if [[ -e vendor  && ! -e /build/vendor ]]; then
   cp -R vendor /build
-  ls -al /build
-  ls -al /build/vendor/composer/
-  ls -al /build/vendor/bin
-  ls -al vendor/squizlabs/php_codesniffer/bin
   # Make directories writeable so docker can access.
   find /build/vendor -type d -exec chmod a+w {} \;
   # Make files writeable so docker can access.

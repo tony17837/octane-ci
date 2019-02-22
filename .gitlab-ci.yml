@@ -1,4 +1,7 @@
-image: docksal/cli:2.6-php7.1
+image: outrigger/gitlab-ci-workspace:stable
+
+services:
+  - docker:dind
 
 variables:
   # Ensure fast file system is used for docker:dind
@@ -37,9 +40,6 @@ before_script:
   - source .env
 
 .deploy_script: &deploy_script
-  image: outrigger/gitlab-ci-workspace:stable
-  services:
-    - docker:dind
   script:
     # Display versions of docker, etc. Comes from gitlab-ci-workspace container.
     - /versions.sh
@@ -74,15 +74,11 @@ before_script:
 
 build:
   stage: build
-  image: outrigger/gitlab-ci-workspace:stable
-  services:
-    - docker:dind
   script:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # Grab cached files from previous build.
-    #- docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
-    - ls -al
+    - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
     # assemble the codebase
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
@@ -100,10 +96,6 @@ build:
 
 validate:
   stage: validate
-  image: outrigger/gitlab-ci-workspace:stable
-  services:
-    - docker:dind
-    - docksal/cli:2.6-php7.1
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
@@ -111,15 +103,11 @@ validate:
     name: ${PROJECT_ENV}
   script:
     # Login so we can push images to the registry
-    - ls -al
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # Grab cached files from previous build.
     - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
-    - ls -al
-    - ls -al vendor/bin
-    - ls -al vendor/squizlabs/php_codesniffer/bin
-    - ./bin/validate
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   only:
     - /^master/
   when: manual
