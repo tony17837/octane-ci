@@ -8,6 +8,14 @@ Octane is a Drupal 8 project scaffold that provides the following features:
 * Provides starting configuration for Outrigger.
 * (TODO) Provides starting configuration for CI on GitLabs.
 
+## Quick Setup Guide
+
+1. Clone this repo and use your project's name as the directory name.
+2. Update the `.env` file as needed for your project.
+3. Run `fin init`.
+4. For the Drupal site, open `http://PROJECTNAME.docksal`
+5. For Pattern Lab, run `fin theme` and open `http://design.PROJECTNAME.docksal`
+
 ## Installation
 To create a Drupal Octane project clone this repository to a directory
 named for your project.
