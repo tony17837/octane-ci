@@ -2,7 +2,7 @@
 FROM outrigger/apache-php:php71
 
 # Things to support drush.
-RUN yum install -y mysql which
+RUN yum install -y mysql which rsync
 
 # Add composer installed tools to path.
 ENV PATH=$PATH:/var/www/vendor/bin
