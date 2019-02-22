@@ -74,15 +74,17 @@ before_script:
 
 build:
   stage: build
+  image: outrigger/gitlab-ci-workspace:stable
+  services:
+    - docker:dind
   script:
     # Login so we can push images to the registry
-    ##- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # Grab cached files from previous build.
-    ##- docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
+    - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
     - ls -al
-    - .gitlab-ci/init.sh
     # assemble the codebase
-    ##- docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
+    - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
     ##- cp .gitlab-ci/Dockerfile.web Dockerfile
     # Use previous build as cache for performance.

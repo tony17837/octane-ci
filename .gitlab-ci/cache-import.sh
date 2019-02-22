@@ -18,6 +18,7 @@ if [[ -e vendor  && ! -e /build/vendor ]]; then
   find /build/vendor -type f -exec chmod 666 {} \;
   ls -al /build
   ls -al /build/vendor/composer/
+  ls -al /build/vendor/composer/bin
 fi
 
 # Only copy cached composer.lock if project doesn't already have one in repo.
