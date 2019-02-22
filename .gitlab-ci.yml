@@ -1,8 +1,4 @@
-#image: outrigger/gitlab-ci-workspace:stable
 image: docksal/cli:2.6-php7.1
-
-#services:
-#  - docker:dind
 
 variables:
   # Ensure fast file system is used for docker:dind
@@ -41,6 +37,9 @@ before_script:
   - source .env
 
 .deploy_script: &deploy_script
+  image: outrigger/gitlab-ci-workspace:stable
+  services:
+    - docker:dind
   script:
     # Display versions of docker, etc. Comes from gitlab-ci-workspace container.
     - /versions.sh
@@ -99,6 +98,8 @@ build:
 
 validate:
   stage: validate
+  services:
+    - docker:dind
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
