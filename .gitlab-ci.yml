@@ -39,12 +39,6 @@ before_script:
   # Define project-specific environment variables.
   - source .env
 
-.prime_cache: &prime_cache
-  # Login so we can push images to the registry
-  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-  # Grab cached files from previous build.
-  - docker run --rm -v ${PWD}:/build ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} /build/.gitlab-ci/cache-import.sh
-
 .deploy_script: &deploy_script
   script:
     # Display versions of docker, etc. Comes from gitlab-ci-workspace container.
@@ -81,7 +75,8 @@ before_script:
 build:
   stage: build
   script:
-    <<: *prime_cache
+    # Prime the cache
+    - ./.gitlab-ci/cache.prime.sh
     # assemble the codebase
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
@@ -105,7 +100,9 @@ validate:
   environment:
     name: ${PROJECT_ENV}
   script:
-    <<: *prime_cache
+    # Prime the cache
+    - ./.gitlab-ci/cache.prime.sh
+    # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
   only:
     - /^master/
