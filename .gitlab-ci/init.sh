@@ -6,7 +6,7 @@
 ls -al
 
 # Install Particle
-#./bin/particle
+./bin/particle
 
 # Initial build of site.
 ./bin/build "$@"
