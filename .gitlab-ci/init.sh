@@ -3,6 +3,7 @@
 # Should match the .octane/init.sh script used for Docksal local setup.
 
 cd /var/www
+ls -al
 
 # Install Particle
 #./bin/particle
