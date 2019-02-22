@@ -98,6 +98,7 @@ build:
 
 validate:
   stage: validate
+  image: outrigger/gitlab-ci-workspace:stable
   services:
     - docker:dind
   variables:
