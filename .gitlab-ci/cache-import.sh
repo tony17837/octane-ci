@@ -19,7 +19,7 @@ if [[ -e vendor  && ! -e /build/vendor ]]; then
   ls -al /build
   ls -al /build/vendor/composer/
   ls -al /build/vendor/bin
-  ls -al vendor/squizlabs/php_codesniffer/bin
+  ls -al /build/vendor/squizlabs/php_codesniffer/bin
 fi
 
 # Only copy cached composer.lock if project doesn't already have one in repo.
@@ -27,4 +27,11 @@ if [[ -e composer.lock && ! -e /build/composer.lock ]]; then
   cp composer.lock /build
 fi
 
-# find . -type d -exec chmod 777 {} \;
+# Only copy cached node_modules if project doesn't already have one in repo.
+if [[ -e ${THEME_PATH}/node_modules && ! -e ${THEME_PATH}/node_modules ]]; then
+  cp -R ${THEME_PATH}/node_modules /build/${THEME_PATH}/node_modules
+  # Make directories writeable so docker can access.
+  find /build/${THEME_PATH}/node_modules -type d -exec chmod a+w {} \;
+  # Make files writeable so docker can access.
+  find /build/${THEME_PATH}/node_modules -type f -exec chmod a+w {} \;
+fi
