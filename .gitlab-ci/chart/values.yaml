@@ -12,6 +12,7 @@ image:
   # repository: PUT_REPO_AND_IMAGE_PATH_HERE
   # tag: latest
   pullPolicy: Always
+  build: docksal/cli:2.6-php7.1
 service:
   name: http
   type: ClusterIP

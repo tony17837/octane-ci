@@ -18,6 +18,12 @@ spec:
         webcontainer: "true"
     spec:
       containers:
+        - name: {{ template "chart.fullname" . }}-build
+          image: "{{ .Values.image.build }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: webroot
+              mountPath: /var/www
         - name: {{ template "chart.fullname" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -53,6 +59,8 @@ spec:
           volumeMounts:
             - name: {{ default "cms" .Values.ingress.url.project }}-files
               mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
+            - name: webroot
+              mountPath: /var/www
           # TODO these probes were /user/login, determine what they should be
           # TODO the timeoutSeconds were bumped higher than swarm test project
           #      to support the web container not being cycled during cache
