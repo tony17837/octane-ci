@@ -1,4 +1,4 @@
-image: outrigger/gitlab-ci-workspace:stable
+image: outrigger/gitlab-ci-workspace:latest
 
 services:
   - docker:dind
@@ -130,7 +130,7 @@ update:
   environment:
     name: ${PROJECT_ENV}
   script:
-    - ./.gitlab-ci/exec-web.sh /var/www/bin/update -y
+    - ./.gitlab-ci/exec-web.sh /var/www/bin/import -y
   only:
     - /^master/
 #  when: manual
