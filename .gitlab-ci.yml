@@ -52,7 +52,8 @@ before_script:
     - helm dependency build .gitlab-ci/chart
     # Do the deployment and output all the YAML resources deployed for this release.
     - helm version
-    - helm template --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
+    - .gitlab-ci/env-values.sh > .gitlab-ci/env-values.yaml
+    - helm template -f .gitlab-ci/env-values.yaml --output-dir .gitlab-ci/manifests --name ${RELEASE_NAME} --set nameOverride=${CI_ENVIRONMENT_SLUG} --set image.repository=${WEB_IMAGE} --set image.tag=${CI_COMMIT_SHA} --set env.tier=${PROJECT_TIER} --set build_id="build-${CI_JOB_ID}" --set ingress.url.env=${PROJECT_ENV} --set ingress.url.project=${PROJECT_NAME} --debug .gitlab-ci/chart
     # Remove un-needed mariadb-test pod.
     - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/test-runner.yaml
     - rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/tests.yaml
