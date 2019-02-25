@@ -41,3 +41,8 @@ if [[ -e ${THEME_PATH}/node_modules && ! -e ${THEME_PATH}/node_modules ]]; then
   # Make files writeable so docker can access.
   find /build/${THEME_PATH}/node_modules -type f -exec chmod a+w {} \;
 fi
+
+# Only copy cached composer.lock if project doesn't already have one in repo.
+if [[ -e ${THEME_PATH}/package-lock.json && ! -e ${THEME_PATH}/package-lock.json ]]; then
+  cp ${THEME_PATH}/package-lock.json /build/${THEME_PATH}/package-lock.json
+fi
