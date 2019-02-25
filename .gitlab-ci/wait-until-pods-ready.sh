@@ -11,7 +11,7 @@
 
 # Usage: wait-until-pods-ready NAMESPACE PERIOD INTERVAL
 # NAMESPACE defaults to current
-# PERIOD defaults to 12
+# PERIOD defaults to 120
 # INTERVAL defaults to 10
 
 NAMESPACE="$1"
@@ -37,7 +37,7 @@ function __pods_ready() {
 function __wait-until-pods-ready() {
   local period interval i pods
 
-  period="${2:-12}"
+  period="${2:-120}"
   interval="${3:-10}"
 
   if [[ ${NAMESPACE} != "" ]]; then
