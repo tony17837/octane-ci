@@ -112,6 +112,7 @@ validate:
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
   cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
       - vendor
       - node_modules
