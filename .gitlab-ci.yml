@@ -92,6 +92,11 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
+  cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+    paths:
+      - vendor
+      - node_modules
   when: manual
 
 validate:
@@ -103,9 +108,13 @@ validate:
     name: ${PROJECT_ENV}
   script:
     # Prime the cache
-    - ./.gitlab-ci/cache-prime.sh
+    ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+  cache:
+    paths:
+      - vendor
+      - node_modules
   only:
     - /^master/
   when: manual
