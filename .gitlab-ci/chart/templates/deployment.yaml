@@ -57,8 +57,8 @@ spec:
             - name: {{ .Values.service.name }}
               containerPort: {{ .Values.service.internalPort }}
           volumeMounts:
-            - name: {{ default "cms" .Values.ingress.url.project }}-files
-              mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
+            #- name: {{ default "cms" .Values.ingress.url.project }}-files
+            #  mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
             - name: webroot
               mountPath: /var/www
           # TODO these probes were /user/login, determine what they should be
