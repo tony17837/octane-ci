@@ -4,6 +4,10 @@
 # being a good generic template for a project to start with. These
 # can be identified as commented items along with the environmental
 # variable which typically is used to set them.
+#
+# NOTE: In addition to overrides from --set, some values are overridden
+# by the .gitlab-ci/env-values.sh script that sets these from environment
+# variables from the .env file.
 replicaCount: 1
 # nameOverride=${CI_ENVIRONMENT_SLUG}
 # nameOverride: THIS_MUST_BE_DYNAMIC_TO_SUPPORT_MULTIPLE_ENVIRONMENTS

@@ -80,6 +80,15 @@ spec:
 {{ toYaml .Values.resources | indent 12 }}
       imagePullSecrets:
         - name: gitlab-registry-secret
+      initContainers:
+        - name: webdata
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: [bash, -c]
+          args: ["cp -r /var/www/* /data"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - name: webroot
+              mountPath: /data
       volumes:
         - name: {{ default "cms" .Values.ingress.url.project }}-files
         {{- if .Values.persistence.enabled }}
@@ -89,6 +98,7 @@ spec:
           emptyDir: {}
         {{- end }}
         - name: webroot
+          emptyDir: {}
     {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}
