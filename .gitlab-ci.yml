@@ -1,4 +1,4 @@
-image: outrigger/gitlab-ci-workspace:latest
+image: outrigger/gitlab-ci-workspace:stable
 
 services:
   - docker:dind
@@ -59,8 +59,9 @@ before_script:
     # Send helm manifests to kubectl to create/update the pods.
     - kubectl apply --recursive --filename .gitlab-ci/manifests
     # Wait for pods to become available.
-    - kubectl rollout status --watch deployment/${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-${CI_ENVIRONMENT_SLUG}
-    - kubectl get pods
+    - .gitlab-ci/wait-until-pods-ready.sh ${KUBE_NAMESPACE}
+    ##- kubectl rollout status --watch deployment/${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-${CI_ENVIRONMENT_SLUG}
+    ##- kubectl get pods
     # Add any post-deploy commands here, such as flowdock notifications
     # - ./.gitlab-ci/flowdock-notify.sh "Deployment complete for ${CI_COMMIT_TITLE} to ${CI_ENVIRONMENT_URL}"
 
@@ -143,6 +144,8 @@ test:
   environment:
     name: ${PROJECT_ENV}
   script:
+  # NOTE: This is not working yet.
+  # Tests need to run in a build container, not the web container.
     - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/

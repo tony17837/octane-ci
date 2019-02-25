@@ -16,13 +16,15 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
   printf "$INFO_SLUG Running update hooks...\n"
   drush updb -y
 
-  # Import configuration. This will overwrite any local changes in your DB.
-  printf "$INFO_SLUG Importing config changes...\n"
-  drush config-import -y
+  if [ -e "${CONFIG_PATH}/default/system.site.yml" ]; then
+    # Import configuration if it exists. This will overwrite any local changes in your DB.
+    printf "$INFO_SLUG Importing config changes...\n"
+    drush config-import -y
 
-  # Need a clear-cache here in case new configuration is needed in theme.
-  printf "$INFO_SLUG Clearing cache...\n"
-  drush cr
+    # Need a clear-cache here in case new configuration is needed in theme.
+    printf "$INFO_SLUG Clearing cache...\n"
+    drush cr
+  fi
 
 else
   # If we don't have a Drupal site, install it now.
