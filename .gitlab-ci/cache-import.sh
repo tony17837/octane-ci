@@ -9,11 +9,19 @@ cd /var/www
 # Copy any files needed from the container into /build.
 # For example, vendor, node_modules, etc.
 
+ls -al .
+ls -al build/docroot
+
 rsync -au . /build
 # Make directories writeable so docker can access.
 find /build -type d -exec chmod a+w {} \;
 # Make files writeable so docker can access.
 find /build -type f -exec chmod a+w {} \;
+
+ls -al .
+ls -al /build
+ls -al /build/build/docroot
+
 
 exit 0
 
