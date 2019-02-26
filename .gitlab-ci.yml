@@ -99,7 +99,7 @@ build:
     paths:
       - build
       - vendor
-#      - composer.lock
+      - composer.lock
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
   when: manual
