@@ -108,8 +108,10 @@
             "build/docroot/modules/contrib/{$name}": [
                 "type:drupal-module"
             ],
-            "build/docroot/libraries/contrib/{$name}": [
-                "type:drupal-library"
+            "build/docroot/libraries/{$name}": [
+                "type:drupal-library",
+                "type:bower-asset",
+                "type:npm-asset"
             ],
             "build/docroot/profiles/contrib/{$name}": [
                 "type:drupal-profile"

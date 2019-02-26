@@ -9,11 +9,13 @@ cd /var/www
 # Copy any files needed from the container into /build.
 # For example, vendor, node_modules, etc.
 
-##rsync -au . /build
+rsync -au . /build
 # Make directories writeable so docker can access.
-##find /build -type d -exec chmod a+w {} \;
+find /build -type d -exec chmod a+w {} \;
 # Make files writeable so docker can access.
-##find /build -type f -exec chmod a+w {} \;
+find /build -type f -exec chmod a+w {} \;
+
+exit 0
 
 # Only copy cached vendor if project doesn't already have one in repo.
 if [[ -e vendor  && ! -e /build/vendor ]]; then

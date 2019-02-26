@@ -97,7 +97,7 @@ build:
     paths:
       - vendor
       - node_modules
-#  when: manual
+  when: manual
 
 validate:
   stage: tasks
@@ -132,7 +132,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-#  when: manual
+  when: manual
 
 update:
   stage: update
@@ -145,7 +145,7 @@ update:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/import -y
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 test:
   stage: test
