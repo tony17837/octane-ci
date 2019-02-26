@@ -5,7 +5,9 @@
 #: exec_target = cli
 
 # Init the tools like npm within the cli container
-source ~/.profile
+if [ -e ~/.profile ]; then
+  source ~/.profile
+fi
 
 ls -al /var/www/build/docroot
 ls -al /var/www/build/docroot/modules

@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 # Run all the linting tools for the project
 # This runs within the Build/CLI container but before site is built.
-# Composer /vendor dependencies are available, but build/docroot is not.
-# npm and theme node_modules are available, but build/docroot is not.
+# All tools are available, but there isn't any Drupal site or database.
 #: exec_target = cli
+
+# Init the tools like npm within the cli container
+if [ -e ~/.profile ]; then
+  source ~/.profile
+fi
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
