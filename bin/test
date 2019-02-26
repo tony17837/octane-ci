@@ -9,12 +9,6 @@ if [ -e ~/.profile ]; then
   source ~/.profile
 fi
 
-ls -al /var/www/build/docroot
-ls -al /var/www/build/docroot/modules
-ls -al /var/www/build/docroot/sites
-
-echo "Path is: $PATH"
-
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
   printf "$INFO_SLUG Running $1 tests...\n"
