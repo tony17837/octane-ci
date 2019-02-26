@@ -21,6 +21,7 @@ find /build -type f -exec chmod a+w {} \;
 ls -al .
 ls -al /build
 ls -al /build/build/docroot
+ls -al /home/docker/.composer/cache/files
 
 
 exit 0
