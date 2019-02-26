@@ -98,8 +98,8 @@ build:
       - build
       - vendor
       - composer.lock
-      - ${THEME_PATH}/node_modules
-      - ${THEME_PATH}/package-lock.json
+      - project/themes/*/node_modules
+      - project/themes/*/package-lock.json
   when: manual
 
 validate:
@@ -121,8 +121,8 @@ validate:
       - build
       - vendor
       - composer.lock
-      - ${THEME_PATH}/node_modules
-      - ${THEME_PATH}/package-lock.json
+      - project/themes/*/node_modules
+      - project/themes/*/package-lock.json
   only:
     - /^master/
   when: manual
