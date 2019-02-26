@@ -82,8 +82,6 @@ build:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
-    - rm composer.lock
-    - ls -al
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile.web Dockerfile
@@ -91,10 +89,10 @@ build:
     - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
     # Tag it based on slug (branch name) too which can allow for easier commands
     # of the form "deploy the latest version of BRANCH"
-    ##- docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # Push all the plain tags and the qa variants and for cache
-    ##- docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
-    ##- docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
+    - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
@@ -104,7 +102,7 @@ build:
       - composer.lock
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
-  when: manual
+#  when: manual
 
 validate:
   stage: validate
@@ -122,14 +120,11 @@ validate:
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     # Login so we can push images to the registry
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker pull docksal/cli:2.6-php7.1 || true
-    ##- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
-    - docker push docksal/cli:2.6-php7.1
-    - ls -al
-    - rm -rf cli_image.tar
-    - rm -rf cli_image.tar.gz
+    #- docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    #- docker pull docksal/cli:2.6-php7.1 || true
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    #- docker push docksal/cli:2.6-php7.1
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
@@ -138,11 +133,9 @@ validate:
       - composer.lock
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
-      - cli_image.tar
-      - cli_image.tar.gz
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 deploy_master:
   stage: deploy
@@ -156,7 +149,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-  when: manual
+#  when: manual
 
 update:
   stage: update
@@ -169,7 +162,7 @@ update:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/import -y
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 test:
   stage: test
@@ -184,7 +177,7 @@ test:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/
-  when: manual
+#  when: manual
 
 install:
   stage: tasks
@@ -205,6 +198,28 @@ clean_up_environment:
   environment:
     name: dev
     action: stop
+  only:
+    - /^master/
+  when: manual
+
+clear_composer_cache:
+  stage: tasks
+  script:
+    - rm -rf vendor
+    - rm -rf build/docroot/root
+    - rm -rf build/docroot/modules/contrib
+    - rm -rf composer.lock
+  environment:
+    name: dev
+    action: stop
+  cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+    paths:
+      - build
+      - vendor
+      - composer.lock
+      - project/themes/*/node_modules
+      - project/themes/*/package-lock.json
   only:
     - /^master/
   when: manual
