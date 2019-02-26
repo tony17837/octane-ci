@@ -112,6 +112,10 @@ validate:
   environment:
     name: ${PROJECT_ENV}
   script:
+    - ls -al
+    - ls -al vendor
+    - ls -al build/docroot
+    - ls -al project/themes/particle
     # Prime the cache
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
