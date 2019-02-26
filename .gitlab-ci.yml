@@ -120,9 +120,12 @@ validate:
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     - docker load -i cli_image.tar || true
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    ##- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
     - docker save docksal/cli:2.6-php7.1 -o cli_image.tar
+    - which gzip
+    - gzip cli_image.tar
+    - ls -al
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
@@ -132,6 +135,7 @@ validate:
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
       - cli_image.tar
+      - cli_image.tar.gz
   only:
     - /^master/
   when: manual
