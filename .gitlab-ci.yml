@@ -117,14 +117,14 @@ validate:
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
-    paths:
-      - build
-      - vendor
-      - composer.lock
-      - project/themes/*/node_modules
-      - project/themes/*/package-lock.json
+#  cache:
+#    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+#    paths:
+#      - build
+#      - vendor
+#      - composer.lock
+#      - project/themes/*/node_modules
+#      - project/themes/*/package-lock.json
   only:
     - /^master/
   when: manual
