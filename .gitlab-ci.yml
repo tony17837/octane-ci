@@ -79,6 +79,8 @@ build:
   script:
     # Prime the cache
     ##- ./.gitlab-ci/cache-prime.sh
+    # Login so we can push images to the registry
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
     - rm composer.lock
     - ls -al
@@ -119,13 +121,15 @@ validate:
     # Prime the cache
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
-    - docker load -i cli_image.tar || true
+    # Login so we can push images to the registry
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull docksal/cli:2.6-php7.1 || true
     ##- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
-    - docker save docksal/cli:2.6-php7.1 -o cli_image.tar
-    - which gzip
-    - gzip cli_image.tar
+    - docker push docksal/cli:2.6-php7.1
     - ls -al
+    - rm -rf cli_image.tar
+    - rm -rf cli_image.tar.gz
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
