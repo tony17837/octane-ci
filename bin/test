@@ -7,6 +7,10 @@
 # Init the tools like npm within the cli container
 source ~/.profile
 
+ls -al /var/www/build/docroot
+ls -al /var/www/build/docroot/modules
+ls -al /var/www/build/docroot/sites
+
 echo "Path is: $PATH"
 
 if [[ ! -z "$1" && -z "$2" ]]; then
