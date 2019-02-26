@@ -100,7 +100,7 @@ build:
   when: manual
 
 validate:
-  stage: tasks
+  stage: validate
   variables:
     PROJECT_ENV: dev
     RELEASE_NAME: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
@@ -111,6 +111,7 @@ validate:
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:

@@ -20,8 +20,6 @@ elif [ ! -z "$2" ]; then
 else
   # Run all non-unit tests.
   # Unit tests are run in a separate job before the build is deployed.
-  printf "$INFO_SLUG Running Unit tests...\n"
-  composer test -- --testsuite unit
   printf "$INFO_SLUG Running Kernel tests...\n"
   composer test -- --testsuite kernel
   printf "$INFO_SLUG Running Functional tests...\n"
