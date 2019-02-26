@@ -196,8 +196,7 @@ clean_up_environment:
   stage: tasks
   <<: *cleanup_script
   environment:
-    name: dev
-    action: stop
+    name: ${PROJECT_ENV}
   only:
     - /^master/
   when: manual
@@ -210,8 +209,7 @@ clear_composer_cache:
     - rm -rf build/docroot/modules/contrib
     - rm -rf composer.lock
   environment:
-    name: dev
-    action: stop
+    name: ${PROJECT_ENV}
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
