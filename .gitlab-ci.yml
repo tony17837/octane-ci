@@ -78,8 +78,9 @@ build:
   stage: build
   script:
     # Prime the cache
-    - ./.gitlab-ci/cache-prime.sh
+    ##- ./.gitlab-ci/cache-prime.sh
     # assemble the codebase
+    - ls -al
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile.web Dockerfile
@@ -97,7 +98,7 @@ build:
     paths:
       - build
       - vendor
-      - composer.lock
+#      - composer.lock
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
   when: manual

@@ -9,11 +9,6 @@ if [ -e ~/.profile ]; then
   source ~/.profile
 fi
 
-ls -al
-ls -al vendor
-ls -al build/docroot
-ls -al build/docroot/sites
-
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
 PHPCS_PATHS="project/profiles project/modules"
