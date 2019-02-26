@@ -87,10 +87,10 @@ build:
     - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .
     # Tag it based on slug (branch name) too which can allow for easier commands
     # of the form "deploy the latest version of BRANCH"
-    - docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    ##- docker tag ${WEB_IMAGE}:${CI_COMMIT_SHA} ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # Push all the plain tags and the qa variants and for cache
-    - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
-    - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
+    ##- docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
+    ##- docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
