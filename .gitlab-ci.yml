@@ -80,6 +80,7 @@ build:
     # Prime the cache
     ##- ./.gitlab-ci/cache-prime.sh
     # assemble the codebase
+    - rm composer.lock
     - ls -al
     - docker-compose -f .gitlab-ci/build.yml run --rm base .gitlab-ci/init.sh
     # bundle it into a docker image
