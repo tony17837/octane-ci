@@ -120,7 +120,8 @@ validate:
     ##- ./.gitlab-ci/cache-prime.sh
     # Run the validate script
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    #- docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    - ls -al /var/lib/docker
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
