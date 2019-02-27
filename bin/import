@@ -31,4 +31,6 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 else
   # If we don't have a Drupal site, install it now.
   /var/www/bin/install "$@"
+  # Pass the install error status back out to fail job if install fails.
+  exit $?
 fi
