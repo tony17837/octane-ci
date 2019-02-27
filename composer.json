@@ -91,6 +91,11 @@
             "drupal/core": "-p2"
         },
         "patches": {
+            "drupal/core": {
+                "2699157 - Plugin Lazy loading can cause usort warning": "https://www.drupal.org/files/issues/2699157-23.drupal.Plugin-Lazy-loading-can-cause-usort-warning.patch",
+                "2759397 - Patch EntityReferenceItemNormalizer to prevent recursion": "https://www.drupal.org/files/issues/2759397-1-entity_reference_recursion.patch",
+                "2679775 - Fixes float issue with inline label fields (entity references on most cases).": "https://www.drupal.org/files/issues/2018-03-30/2679775-19-clearfix_enclosing_label_and_contents.patch"
+            }
         },
         "installer-types": [
             "bower-asset",
