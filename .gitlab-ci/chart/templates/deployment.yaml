@@ -24,9 +24,40 @@ spec:
           volumeMounts:
             - name: webroot
               mountPath: /var/www
+          env:
+          - name: BUILD_ID
+            value: {{ default "build-0" .Values.build_id | quote }}
+          - name: DOCROOT
+            value: {{ default "" .Values.env.docroot | quote }}
+          - name: PROJECT_TIER
+            value: {{ default "" .Values.env.tier | quote }}
+          - name: PHP_MAX_EXECUTION_TIME
+            value: {{ default "60" .Values.env.phpMaxExecutionTime | quote }}
+          - name: PHP_MEMORY_LIMIT
+            value: {{ default "256m" .Values.env.phpMemoryLimit | quote }}
+          - name: MEMCACHED_HOST
+            value: {{ template "chart.memcached.fullname" . }}
+          - name: MYSQL_HOST
+            value: {{ template "chart.mariadb.fullname" . }}
+          - name: MYSQL_PORT
+            value: "3306"
+          - name: MYSQL_USER
+            value: {{ default "" .Values.mariadb.mariadbUser | quote }}
+          - name: MYSQL_DATABASE
+            value: {{ default "" .Values.mariadb.mariadbDatabase | quote }}
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ template "chart.mariadb.fullname" . }}
+                key: mariadb-password
         - name: {{ template "chart.fullname" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            #- name: {{ default "cms" .Values.ingress.url.project }}-files
+            #  mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
+            - name: webroot
+              mountPath: /var/www
           env:
           - name: BUILD_ID
             value: {{ default "build-0" .Values.build_id | quote }}
@@ -56,11 +87,6 @@ spec:
           ports:
             - name: {{ .Values.service.name }}
               containerPort: {{ .Values.service.internalPort }}
-          volumeMounts:
-            #- name: {{ default "cms" .Values.ingress.url.project }}-files
-            #  mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
-            - name: webroot
-              mountPath: /var/www
           # TODO these probes were /user/login, determine what they should be
           # TODO the timeoutSeconds were bumped higher than swarm test project
           #      to support the web container not being cycled during cache
