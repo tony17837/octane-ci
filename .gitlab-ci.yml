@@ -102,7 +102,7 @@ build:
       - composer.lock
       - project/themes/*/node_modules
       - project/themes/*/package-lock.json
-#  when: manual
+  when: manual
 
 validate:
   stage: validate
@@ -135,7 +135,7 @@ validate:
       - project/themes/*/package-lock.json
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 deploy_master:
   stage: deploy
@@ -149,7 +149,7 @@ deploy_master:
     url: http://www.${PROJECT_ENV}.${PROJECT_NAME}.kube.p2devcloud.com
   only:
     - /^master$/
-#  when: manual
+  when: manual
 
 update:
   stage: update
@@ -162,7 +162,7 @@ update:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/import -y
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 test:
   stage: test
@@ -177,7 +177,7 @@ test:
     - ./.gitlab-ci/exec-web.sh /var/www/bin/test
   only:
     - /^master/
-#  when: manual
+  when: manual
 
 install:
   stage: tasks
@@ -203,11 +203,12 @@ clean_up_environment:
 
 clear_composer_cache:
   stage: tasks
-  script:
-    - rm -rf vendor
-    - rm -rf build/docroot/root
-    - rm -rf build/docroot/modules/contrib
-    - rm -rf composer.lock
+  script:s
+    - ls -al ${THEME_PATH}
+    #- rm -rf vendor
+    #- rm -rf build/docroot/root
+    #- rm -rf build/docroot/modules/contrib
+    #- rm -rf composer.lock
   environment:
     name: ${PROJECT_ENV}
   cache:
