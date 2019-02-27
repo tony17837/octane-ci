@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Update the site.
-# Runs in the web container, NOT the build container.
+# Runs in the WEB container, NOT the build container.
 # So ONLY use drush commands here, or other tools available in web container.
 #: exec_target = cli
 
+drush status
 # Check to see if Drupal is already installed.
 DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
+echo "Bootstrap status: DRUPAL_BOOTSTRAP"
 if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 
   # Clear cache before updates.
