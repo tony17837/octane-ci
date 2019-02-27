@@ -203,7 +203,7 @@ clean_up_environment:
 
 clear_composer_cache:
   stage: tasks
-  script:s
+  script:
     - ls -al ${THEME_PATH}
     #- rm -rf vendor
     #- rm -rf build/docroot/root
