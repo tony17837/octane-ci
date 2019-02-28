@@ -209,7 +209,7 @@ clear_composer_cache:
     - ls -al vendor
     - ls -al  ${THEME_PATH}
     - rm composer.lock
-    - rm -rf vendor
+    - rm -rf vendor/*
     - rm -rf build
     - rm -rf composer.lock
     - rm -rf ${THEME_PATH}/node_modules
