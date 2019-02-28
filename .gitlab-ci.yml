@@ -206,6 +206,7 @@ clear_composer_cache:
   stage: tasks
   script:
     - ls -al
+    - ls -al vendor
     - ls -al  ${THEME_PATH}
     - rm composer.lock
     - rm -rf vendor
