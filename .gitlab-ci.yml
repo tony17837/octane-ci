@@ -207,6 +207,7 @@ clear_composer_cache:
   script:
     - ls -al
     - ls -al  ${THEME_PATH}
+    - rm composer.lock
     - rm -rf vendor
     - rm -rf build
     - rm -rf composer.lock
