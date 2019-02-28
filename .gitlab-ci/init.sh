@@ -4,7 +4,8 @@
 
 #cd /var/www
 ls -al
-ls -al /home/docker/.composer/cache/files
+rm -rf build/docroot/core
+ls -al build/docroot
 
 # Install Particle
 ./bin/particle
