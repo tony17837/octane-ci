@@ -3,6 +3,7 @@
 # Should match the .octane/init.sh script used for Docksal local setup.
 
 #cd /var/www
+composer self-update
 ls -al
 rm -rf build/docroot/core
 ls -al build/docroot
