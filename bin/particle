@@ -8,10 +8,8 @@ source ~/.profile
 
 # Only download particle theme if it doesn't already exist.
 # Can't just check for ${THEME_PATH} since node_modules might be cached.
-if [ ! -e ${THEME_PATH}/package.json ]; then
+if [ ! -e ${THEME_PATH} ]; then
   printf "$INFO_SLUG Installing Particle...\n"
-  # Clean theme directory in case previous node_modules cache is present.
-  rm -rf ${THEME_PATH}
   # Install latest Particle theme
   npx phase2/create-particle ${THEME_PATH}
   # @TODO: Remove this once Particle removes Husky.

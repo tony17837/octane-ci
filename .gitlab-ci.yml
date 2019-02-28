@@ -205,11 +205,15 @@ clean_up_environment:
 clear_composer_cache:
   stage: tasks
   script:
+    - ls -al
+    - ls -al  ${THEME_PATH}
     - rm -rf vendor
     - rm -rf build
     - rm -rf composer.lock
     - rm -rf ${THEME_PATH}/node_modules
     - rm -rf ${THEME_PATH}/package-lock.json
+    - ls -al
+    - ls -al  ${THEME_PATH}
   environment:
     name: ${PROJECT_ENV}
   cache:
