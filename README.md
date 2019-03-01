@@ -6,7 +6,7 @@ Octane is a Drupal 8 project scaffold that provides the following features:
 * Adds common modules needed by most large Drupal 8 sites.
 * Provides starting configuration for Docksal.
 * Provides starting configuration for Outrigger.
-* (TODO) Provides starting configuration for CI on GitLabs.
+* (TODO) Provides starting configuration for CI on GitLab.
 
 ## Quick Setup Guide
 
