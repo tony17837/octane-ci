@@ -9,6 +9,7 @@ services:
       - "8080"
     env_file:
       # Pass project-specific environment variables into cli container.
+      - docksal.env
       - ../.env
     environment:
       # Adjust IDE Config for xdebug to work on command line PHP scripts.
@@ -17,11 +18,13 @@ services:
   web:
     env_file:
       # Pass project-specific environment variables into cli container.
+      - docksal.env
       - ../.env
 
   db:
     env_file:
       # Pass project-specific environment variables into cli container.
+      - docksal.env
       - ../.env
 
 # Optional Memcached service.

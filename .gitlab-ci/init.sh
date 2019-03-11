@@ -8,8 +8,10 @@ ls -al
 rm -rf build/docroot/core
 ls -al build/docroot
 
-# Install Particle
-./bin/particle
+if [ -e "./bin/particle" ]; then
+  # Install Particle
+  ./bin/particle
+fi
 
 # Initial build of site.
 ./bin/build "$@"
