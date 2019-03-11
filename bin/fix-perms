@@ -11,9 +11,11 @@
 #: exec_target = cli
 
 printf "$INFO_SLUG Fixing up file permissions for development...\n"
-set -x
 # Ensure Apache manages the files directory.
-chown -R apache:apache /var/www/project/sites/default/files
+if [ ! -e "/var/www/project/sites/default/files" ]; then
+  mkdir /var/www/project/sites/default/files
+fi
+chown -R www-data:www-data /var/www/project/sites/default/files
 chmod 755 /var/www/project/sites/default/files
 # Restore write access to Drupal settings directory after site install.
 # This does not change the settings.php file itself, but helps avoid
