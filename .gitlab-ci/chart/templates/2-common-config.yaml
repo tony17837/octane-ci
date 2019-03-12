@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "chart.fullname" . }}-common-config
+data:
+   BUILD_ID: {{ default "build-0" .Values.build_id | quote }}
+   DOCROOT: {{ default "" .Values.env.docroot | quote }}
+   PROJECT_TIER: {{ default "" .Values.env.tier | quote }}
+   PHP_MAX_EXECUTION_TIME: {{ default "60" .Values.env.phpMaxExecutionTime | quote }}
+   PHP_MEMORY_LIMIT: {{ default "256m" .Values.env.phpMemoryLimit | quote }}
+   MEMCACHED_HOST: {{ template "chart.memcached.fullname" . }}
+   MYSQL_HOST: {{ template "chart.mariadb.fullname" . }}
+   MYSQL_PORT: "3306"
+   MYSQL_USER: {{ default "" .Values.mariadb.mariadbUser | quote }}
+   MYSQL_DATABASE: {{ default "" .Values.mariadb.mariadbDatabase | quote }}
