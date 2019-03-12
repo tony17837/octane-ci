@@ -9,22 +9,24 @@ services:
       - "8080"
     env_file:
       # Pass project-specific environment variables into cli container.
-      - docksal.env
       - ../.env
     environment:
+      # Pass the MYSQL_HOST defined in docksal.env.
+      - MYSQL_HOST
       # Adjust IDE Config for xdebug to work on command line PHP scripts.
       - PHP_IDE_CONFIG=serverName=${VIRTUAL_HOST}
 
   web:
+    environment:
+      # Pass the MYSQL_HOST defined in docksal.env.
+      - MYSQL_HOST
     env_file:
       # Pass project-specific environment variables into cli container.
-      - docksal.env
       - ../.env
 
   db:
     env_file:
       # Pass project-specific environment variables into cli container.
-      - docksal.env
       - ../.env
 
 # Optional Memcached service.
