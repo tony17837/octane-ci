@@ -9,6 +9,15 @@ if [ -e ~/.profile ]; then
   source ~/.profile
 fi
 
+# Check to see if Drupal is already installed.
+DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
+if [ -z "$DRUPAL_BOOTSTRAP" ]; then
+  # No Drupal db, so use sqlite for test.
+  SIMPLETEST_DB="sqlite://localhost//tmp/db.sqlite"
+elif [[ ! -z "$MYSQL_USER" && -z "$SIMPLETEST_DB" ]]; then
+  SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
+fi
+
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
   printf "$INFO_SLUG Running $1 tests...\n"
