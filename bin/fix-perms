@@ -15,9 +15,10 @@ printf "$INFO_SLUG Fixing up file permissions for development...\n"
 if [ ! -e "/var/www/project/sites/default/files" ]; then
   mkdir /var/www/project/sites/default/files
 fi
-chown -R www-data:www-data /var/www/project/sites/default/files
 chmod 755 /var/www/project/sites/default/files
 # Restore write access to Drupal settings directory after site install.
 # This does not change the settings.php file itself, but helps avoid
 # issues such as changes to settings across git branches.
 chmod 755 /var/www/project/sites/default
+# Set file ownership for apache user.  Don't fail if user doesn't exist.
+chown -R apache:apache /var/www/project/sites/default/files || TRUE
