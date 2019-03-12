@@ -29,7 +29,7 @@ fi
 #   GitLab CI: .gitlab-ci/chart/templates/values.yaml
 DB_URL="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
 
-cd /var/www/${DOCROOT}
+cd /var/www/${REL_DOCROOT}
 # Install Drupal site
 if [ -e "${CONFIG_PATH}/default/system.site.yml" ]; then
   # If config exists, install using it.

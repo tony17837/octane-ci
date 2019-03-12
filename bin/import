@@ -4,7 +4,6 @@
 # So ONLY use drush commands here, or other tools available in web container.
 #: exec_target = cli
 
-drush status
 # Check to see if Drupal is already installed.
 DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
 echo "Bootstrap status: DRUPAL_BOOTSTRAP"
