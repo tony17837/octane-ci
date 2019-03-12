@@ -4,10 +4,8 @@
 # Initialize stack.
 fin project start
 
-if [ ! -e .octane/init.sh ]; then
-  # Run the common init script within the cli container.
-  fin exec init.sh "$@"
+# Run the common init script within the cli container.
+fin exec init.sh "$@"
 
-  # Repeat here just to show the site URL when we are done.
-  fin project start
-fi
+# Repeat here just to show the site URL when we are done.
+fin project start
