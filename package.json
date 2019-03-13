@@ -1,0 +1,8 @@
+{
+  "devDependencies": {
+    "gherkin-lint": "^3.0.0"
+  },
+  "scripts": {
+    "gherkin-lint": "gherkin-lint project/tests/features -c project/tests/.gherkin-lintrc"
+  }
+}

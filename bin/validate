@@ -11,7 +11,7 @@ fi
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
-PHPCS_PATHS="project/profiles project/modules"
+PHPCS_PATHS="project/profiles project/modules project/tests/contexts"
 if [ -e ${THEME_PATH}/apps/drupal ]; then
   PHPCS_PATHS="${PHPCS_PATHS} ${THEME_PATH}/apps/drupal"
 fi
@@ -22,6 +22,9 @@ vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
   --extensions="php,module,inc,install,test,profile,theme" \
   --ignore="*.features.*,*.pages*.inc" \
   ${PHPCS_PATHS}
+
+# Behat feature linting.
+npm run gherkin-lint
 
 if [ -e ${THEME_PATH}/apps/drupal ]; then
   # Twig linting.
