@@ -22,6 +22,8 @@ spec:
           image: "{{ .Values.image.build }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
+            - name: {{ default "cms" .Values.ingress.url.project }}-files
+              mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
             - name: webroot
               mountPath: /var/www
           envFrom:
@@ -41,8 +43,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
-            #- name: {{ default "cms" .Values.ingress.url.project }}-files
-            #  mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
+            - name: {{ default "cms" .Values.ingress.url.project }}-files
+              mountPath: {{ .Values.volumeMounts.cmsfiles.mountPath }}
             - name: webroot
               mountPath: /var/www
           envFrom:
