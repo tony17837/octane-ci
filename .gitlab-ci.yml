@@ -53,8 +53,7 @@ before_script:
     # Do the deployment and output all the YAML resources deployed for this release.
     - helm version
     # Create env configMap from .env file.
-    - kubectl delete configmap ${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config || TRUE
-    - kubectl create configmap ${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config --from-env-file=.env
+    - kubectl create configmap ${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config --from-env-file=.env -o yaml --dry-run > .gitlab-ci/manifests/${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config.yaml
     # Create additional values from environment.
     - .gitlab-ci/env-values.sh > .gitlab-ci/env-values.yaml
     # Generate the manifests from the chart templates.

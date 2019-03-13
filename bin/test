@@ -17,6 +17,9 @@ if [ -z "$DRUPAL_BOOTSTRAP" ]; then
 elif [[ ! -z "$MYSQL_USER" && -z "$SIMPLETEST_DB" ]]; then
   SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
 fi
+if [[ ! -z "$VIRTUAL_HOST" && -z "$SIMPLETEST_BASE_URL" ]]; then
+  SIMPLETEST_BASE_URL=http://${VIRTUAL_HOST}
+fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.

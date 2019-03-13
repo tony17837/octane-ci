@@ -21,4 +21,4 @@ chmod 755 /var/www/project/sites/default/files
 # issues such as changes to settings across git branches.
 chmod 755 /var/www/project/sites/default
 # Set file ownership for apache user.  Don't fail if user doesn't exist.
-chown -R apache:apache /var/www/project/sites/default/files || TRUE
+chown -R apache:apache /var/www/project/sites/default/files &>/dev/null || true
