@@ -17,8 +17,16 @@ if [ -z "$DRUPAL_BOOTSTRAP" ]; then
 elif [[ ! -z "$MYSQL_USER" && -z "$SIMPLETEST_DB" ]]; then
   SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
 fi
+
+# Set default testing URL for web host.
 if [[ ! -z "$VIRTUAL_HOST" && -z "$SIMPLETEST_BASE_URL" ]]; then
   SIMPLETEST_BASE_URL=http://${VIRTUAL_HOST}
+elif [[ -z "$SIMPLETEST_BASE_URL" ]]; then
+  SIMPLETEST_BASE_URL=http://localhost
+fi
+# Set default ExistingSite test URL for web host.
+if [[ -z "$DTT_BASE_URL" ]]; then
+  DTT_BASE_URL=${SIMPLETEST_BASE_URL}
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
