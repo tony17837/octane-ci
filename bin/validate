@@ -9,6 +9,9 @@ if [ -e ~/.profile ]; then
   source ~/.profile
 fi
 
+printf "$INFO_SLUG Checking PHP syntax...\n"
+vendor/bin/parallel-lint project
+
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
 PHPCS_PATHS="project/profiles project/modules project/tests/contexts"

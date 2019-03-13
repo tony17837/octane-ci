@@ -38,7 +38,8 @@
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
         "symfony/debug": "^3.4.0",
-        "weitzman/drupal-test-traits": "~1.0"
+        "weitzman/drupal-test-traits": "~1.0",
+        "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "require": {
         "acquia/lightning": "^4.0@alpha",
