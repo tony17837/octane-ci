@@ -25,7 +25,8 @@ default:
 
   extensions:
     Drupal\MinkExtension:
-      base_url: http://web
+      # The `base_url` parameter is not specified here so it can specified via environment variables. For local dev,
+      # this can also be set in a `behat.local.yml` file that then includes this file.
       goutte: ~
       default_session: 'goutte'
       # @todo Setup selenium (should use same settings as JS existing site.)

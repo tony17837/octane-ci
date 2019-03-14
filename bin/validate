@@ -26,9 +26,6 @@ vendor/bin/phpcs --standard="Drupal,DrupalPractice" \
   --ignore="*.features.*,*.pages*.inc" \
   ${PHPCS_PATHS}
 
-# Behat feature linting.
-npm run gherkin-lint
-
 if [ -e ${THEME_PATH}/apps/drupal ]; then
   # Twig linting.
   printf "$INFO_SLUG Checking Twig style...\n"

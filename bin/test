@@ -29,10 +29,20 @@ if [[ -z "$DTT_BASE_URL" ]]; then
   export DTT_BASE_URL=${SIMPLETEST_BASE_URL}
 fi
 
+if [[ -z "$BEHAT_PARAMS" ]]; then
+  # @todo An export is required here for some reason but not on the others?
+  export BEHAT_PARAMS='{"extensions" : {"Drupal\\MinkExtension" : {"base_url" : "'${DTT_BASE_URL}'"}}}'
+fi
+
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
   printf "$INFO_SLUG Running $1 tests...\n"
-  composer test -- --testsuite $1
+  if [[ "$1" == "behat" ]]; then
+    # Run Behat.
+    vendor/bin/behat -c project/tests/behat.yml -fprogress
+  else
+    composer test -- --testsuite $1
+  fi
 elif [ ! -z "$2" ]; then
   # Multiple arguments, pass to phpunit.
   printf "$INFO_SLUG Running tests...\n"
@@ -48,5 +58,9 @@ else
   composer test -- --testsuite functional-javascript
   printf "$INFO_SLUG Running ExistingSite tests...\n"
   composer test -- --testsuite existing-site
+
+  # Run all Behat tests
+  printf "$INFO_SLUG Running Behat tests...\n"
+  vendor/bin/behat -c project/tests/behat.yml -fprogress
 fi
 
