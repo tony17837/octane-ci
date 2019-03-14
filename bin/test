@@ -13,20 +13,20 @@ fi
 DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
 if [ -z "$DRUPAL_BOOTSTRAP" ]; then
   # No Drupal db, so use sqlite for test.
-  SIMPLETEST_DB="sqlite://localhost//tmp/db.sqlite"
+  export SIMPLETEST_DB="sqlite://localhost//tmp/db.sqlite"
 elif [[ ! -z "$MYSQL_USER" && -z "$SIMPLETEST_DB" ]]; then
-  SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
+  export SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
 fi
 
 # Set default testing URL for web host.
 if [[ ! -z "$VIRTUAL_HOST" && -z "$SIMPLETEST_BASE_URL" ]]; then
-  SIMPLETEST_BASE_URL=http://${VIRTUAL_HOST}
+  export SIMPLETEST_BASE_URL=http://${VIRTUAL_HOST}
 elif [[ -z "$SIMPLETEST_BASE_URL" ]]; then
-  SIMPLETEST_BASE_URL=http://localhost
+  export SIMPLETEST_BASE_URL=http://localhost
 fi
 # Set default ExistingSite test URL for web host.
 if [[ -z "$DTT_BASE_URL" ]]; then
-  DTT_BASE_URL=${SIMPLETEST_BASE_URL}
+  export DTT_BASE_URL=${SIMPLETEST_BASE_URL}
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
