@@ -27,7 +27,8 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
     drush cr
   fi
 
-else
+# When there isn't a Drupal site, only install if running in the CI environment.
+elif [ ! -z "$PROJECT_TIER" ]; then
   # If we don't have a Drupal site, install it now.
   /var/www/bin/install "$@"
   # Pass the install error status back out to fail job if install fails.
