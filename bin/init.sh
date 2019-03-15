@@ -14,8 +14,3 @@ fi
 printf "$INFO_SLUG Building site...\n"
 # Initial build of site.
 ./bin/build "$@"
-
-printf "$INFO_SLUG Installing site...\n"
-# Initial build of site.
-./bin/install -y
-
