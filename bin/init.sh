@@ -20,3 +20,9 @@ printf "$INFO_SLUG Building site...\n"
 # Pass the install error status back out to fail job if build fails.
 exit $?
 
+printf "$INFO_SLUG Installing site...\n"
+# Initial build of site.
+./bin/install -y
+# Pass the install error status back out to fail job if build fails.
+exit $?
+
