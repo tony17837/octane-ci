@@ -4,18 +4,10 @@
 # Runs in the Build container, so all tools are available.
 #: exec_target = cli
 
+set -e
+
 # Build composer, build theme, etc.
 bin/build
-retVal=$?
-if [ $retVal -ne 0 ]; then
-  # Exit if build failed.
-  exit $retVal
-fi
 
 # Run updates, clear cache, etc.
 bin/import
-retVal=$?
-if [ $retVal -ne 0 ]; then
-  # Exit if import/install failed.
-  exit $retVal
-fi

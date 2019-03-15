@@ -4,7 +4,7 @@
 # So ONLY use drush commands here, or other tools available in web container.
 #: exec_target = cli
 
-cd ${REL_DOCROOT}
+set -e
 
 printf "$INFO_SLUG Exporting configuration...\n"
 drush config-export

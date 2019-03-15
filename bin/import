@@ -4,6 +4,8 @@
 # So ONLY use drush commands here, or other tools available in web container.
 #: exec_target = cli
 
+set -e
+
 # Check to see if Drupal is already installed.
 DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
 echo "Bootstrap status: DRUPAL_BOOTSTRAP"
@@ -31,6 +33,4 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 elif [ ! -z "$PROJECT_TIER" ]; then
   # If we don't have a Drupal site, install it now.
   /var/www/bin/install "$@"
-  # Pass the install error status back out to fail job if install fails.
-  exit $?
 fi
