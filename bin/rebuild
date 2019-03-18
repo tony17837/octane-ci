@@ -6,8 +6,19 @@
 
 set -e
 
+# Parse comment line arguments
+CONFIRM=''
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -y)
+    CONFIRM='-y'
+    shift # past argument
+    ;;
+  esac
+done
+
 # Build composer, build theme, etc.
 bin/build
 
 # Run updates, clear cache, etc.
-bin/import
+bin/import $CONFIRM

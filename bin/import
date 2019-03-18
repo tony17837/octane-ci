@@ -6,9 +6,19 @@
 
 set -e
 
+# Parse comment line arguments
+CONFIRM=''
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -y)
+    CONFIRM='-y'
+    shift # past argument
+    ;;
+  esac
+done
+
 # Check to see if Drupal is already installed.
 DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
-echo "Bootstrap status: DRUPAL_BOOTSTRAP"
 if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 
   # Clear cache before updates.
@@ -22,7 +32,7 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
   if [ -e "${CONFIG_PATH}/default/system.site.yml" ]; then
     # Import configuration if it exists. This will overwrite any local changes in your DB.
     printf "$INFO_SLUG Importing config changes...\n"
-    drush config-import -y
+    drush config-import $CONFIRM
 
     # Need a clear-cache here in case new configuration is needed in theme.
     printf "$INFO_SLUG Clearing cache...\n"
@@ -32,5 +42,5 @@ if [ ! -z "$DRUPAL_BOOTSTRAP" ]; then
 # When there isn't a Drupal site, only install if running in the CI environment.
 elif [ ! -z "$PROJECT_TIER" ]; then
   # If we don't have a Drupal site, install it now.
-  /var/www/bin/install "$@"
+  /var/www/bin/install $CONFIRM
 fi
