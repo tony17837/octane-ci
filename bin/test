@@ -51,4 +51,3 @@ else
   printf "$INFO_SLUG Running ExistingSite tests...\n"
   composer test -- --testsuite existing-site
 fi
-

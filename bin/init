@@ -8,7 +8,7 @@ fin project start
 fin exec bin/init.sh "$@"
 
 # Install initial site.
-fin exec bin/install.sh -y
+fin exec bin/install -y
 
 # Repeat here just to show the site URL when we are done.
 fin project start

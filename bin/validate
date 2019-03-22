@@ -40,5 +40,3 @@ if [ -e ${THEME_PATH}/apps/drupal ]; then
   printf "$INFO_SLUG Checking SCSS style...\n"
   npm run lint:scss
 fi
-
-
