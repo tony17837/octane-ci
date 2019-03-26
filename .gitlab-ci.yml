@@ -79,6 +79,8 @@ build:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Run validation (linting) and unit tests on already built codebase.
 validate:
@@ -95,6 +97,8 @@ validate:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Runs when a feature/* branch is commited/pushed.
 # Doesn't create any environment, so just build, lint, and unit test.
@@ -174,6 +178,8 @@ deploy:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Deploy the an environment with a different branch name.
 # Use this job if your want a different environment name for a branch.
@@ -218,6 +224,8 @@ update:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Run full test suite that needs the running environment.
 test:
@@ -229,6 +237,8 @@ test:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Manual task to reinstall Drupal when needed.
 install:
@@ -240,6 +250,8 @@ install:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
   when: manual
 
 # Purge the Kubernetes environment manually when needed.
@@ -261,6 +273,8 @@ clean_up:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
   when: manual
 
 # Notify when pipeline succeeds.
@@ -273,6 +287,8 @@ success:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Notify when main pipeline branches fails.
 failure:
@@ -284,6 +300,8 @@ failure:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
 
 # Notify when feature branches succeeds.
 success_branch:
