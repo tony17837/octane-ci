@@ -4,6 +4,8 @@
 # This is run within the Build/CLI container, so has all the tools.
 #: exec_target = cli
 
+set -e
+
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
   source ~/.profile
@@ -63,4 +65,3 @@ else
   printf "$INFO_SLUG Running Behat tests...\n"
   vendor/bin/behat -c project/tests/behat.yml -fprogress
 fi
-

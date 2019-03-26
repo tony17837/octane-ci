@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 # Sets chart values from environment variables.
+# Projects shouldn't need to modify this unless you add new environment
+# variables that you need to reference in your chart templates.
 
 # Read environment variables from .env file, skipping comments.
 export $(grep -v '^#' .env | xargs)
 
 # Output the environment variables into YAML format.
-echo "env:"
-echo "  projectName: ${PROJECT_NAME}"
-echo "  profile: ${PROFILE}"
-echo "  docroot: /var/www/${DOCROOT}"
-echo "  projectDir: ${PROJECT_DIR}"
-echo "  configPath: ${CONFIG_PATH}"
-echo "  themePath: ${THEME_PATH}"
-echo "volumeMounts:"
-echo "  cmsfiles:"
-echo "    mountPath: /var/www/${DOCROOT}/sites/default/files"
-echo "mariadb:"
-echo "  mariadbUser: ${MYSQL_USER}"
-echo "  mariadbPassword: ${MYSQL_PASSWORD}"
-echo "  mariadbDatabase: ${MYSQL_DATABASE}"
-
+echo "env:
+  projectName: ${PROJECT_NAME}
+  profile: ${PROFILE}
+  docroot: /var/www/${DOCROOT}
+  projectDir: ${PROJECT_DIR}
+  configPath: ${CONFIG_PATH}
+  themePath: ${THEME_PATH}
+volumeMounts:
+  cmsfiles:
+    mountPath: /var/www/${DOCROOT}/sites/default/files
+mariadb:
+  mariadbUser: ${MYSQL_USER}
+  mariadbPassword: ${MYSQL_PASSWORD}
+  mariadbDatabase: ${MYSQL_DATABASE}
+"

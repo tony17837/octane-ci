@@ -4,18 +4,21 @@
 # Runs in the Build container, so all tools are available.
 #: exec_target = cli
 
+set -e
+
+# Parse comment line arguments
+CONFIRM=''
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -y)
+    CONFIRM='-y'
+    shift # past argument
+    ;;
+  esac
+done
+
 # Build composer, build theme, etc.
-bin/build
-retVal=$?
-if [ $retVal -ne 0 ]; then
-  # Exit if build failed.
-  exit $retVal
-fi
+bin/build $CONFIRM
 
 # Run updates, clear cache, etc.
-bin/import
-retVal=$?
-if [ $retVal -ne 0 ]; then
-  # Exit if import/install failed.
-  exit $retVal
-fi
+bin/import $CONFIRM

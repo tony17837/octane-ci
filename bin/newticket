@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+## Make a new git branch based on ticket number and summary.
+INFO_SLUG="\033[33m[INFO]\033[0m"
+
+# Set the branch that you want feature/* branches created against.
+TEST_BRANCH="qa"
+
+if [[ $(git diff --stat) != '' ]]; then
+  echo "Run git stash before you can create a new branch."
+  exit 0
+fi
+
+read -p "Ticket number?  " varTicketNum
+read -p "Ticket summary? " varTicketDesc
+varTicketDesc=$(echo "$varTicketDesc" | tr '[:upper:]' '[:lower:]')
+
+FEATURE_BRANCH=feature/$varTicketNum-${varTicketDesc// /-}
+
+printf "$INFO_SLUG Updating $TEST_BRANCH branch...\n"
+git checkout ${TEST_BRANCH} && git pull;
+
+printf "$INFO_SLUG Creating a new feature branch ${FEATURE_BRANCH}...\n"
+git checkout -b ${FEATURE_BRANCH};
+
+fin rebuild
+
+printf "$INFO_SLUG Happy developing!\n"

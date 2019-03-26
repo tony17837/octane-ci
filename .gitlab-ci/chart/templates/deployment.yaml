@@ -18,8 +18,8 @@ spec:
         webcontainer: "true"
     spec:
       containers:
-        - name: {{ template "chart.fullname" . }}-build
-          image: "{{ .Values.image.build }}"
+        - name: cli
+          image: "{{ .Values.image.cli }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
             - name: {{ default "cms" .Values.ingress.url.project }}-files
@@ -39,7 +39,7 @@ spec:
                 secretKeyRef:
                   name: {{ template "chart.mariadb.fullname" . }}
                   key: mariadb-password
-        - name: {{ template "chart.fullname" . }}
+        - name: web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:

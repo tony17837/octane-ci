@@ -2,31 +2,68 @@
 # This runs within the CLI container, so all tools are available.
 #: exec_target = cli
 
+set -e
+
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
   source ~/.profile
 fi
 
-printf "$INFO_SLUG Installing composer dependencies...\n"
-if [[ -e composer.lock && ! -e vendor ]]; then
-  # First time project creation, remove old composer lock file.
-  printf "$INFO_SLUG Clearing previous composer lock...\n"
-  rm -rf composer.lock
+# Parse comment line arguments
+CONFIRM=''
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -y)
+    CONFIRM='-y'
+    shift # past argument
+    ;;
+  esac
+done
+
+DO_COMPOSER=1
+if [ -z $CONFIRM ]; then
+  read -p "Do you want to update Composer? [y]/n "
+  if [[ $REPLY =~ ^[Yy]$ || -z $REPLY ]]; then
+    DO_COMPOSER=1
+  else
+    DO_COMPOSER=0
+  fi
 fi
-# Install project dependencies from composer.
-# Uncomment the following command if you want to continue building if patches
-# fail to apply.
-#COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi --no-suggest --profile -vvv
-#
-# Uncomment the following command if you want to ABORT building if patches
-# fail to apply.
-COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest --profile -vvv
+
+if [[ $DO_COMPOSER -eq 1 ]]; then
+  printf "$INFO_SLUG Installing composer dependencies...\n"
+  if [[ -e composer.lock && ! -e vendor ]]; then
+    # First time project creation, remove old composer lock file.
+    printf "$INFO_SLUG Clearing previous composer lock...\n"
+    rm -rf composer.lock
+  fi
+  # Install project dependencies from composer.
+  # Uncomment the following command if you want to continue building if patches
+  # fail to apply.
+  #COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi --no-suggest --profile -vvv
+  #
+  # Uncomment the following command if you want to ABORT building if patches
+  # fail to apply.
+  COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest
+fi
 
 # Build the theme if it exists.
 if [ -e ${THEME_PATH} ]; then
-  printf "$INFO_SLUG Rebuilding theme...\n"
-  cd ${THEME_PATH}
-  npm install
-  npm run build:drupal
+  DO_THEME=1
+  if [ -z $CONFIRM ]; then
+    read -p "Do you want to re-build Theme? [y]/n "
+    if [[ $REPLY =~ ^[Yy]$ || -z $REPLY ]]; then
+      DO_THEME=1
+    else
+      DO_THEME=0
+    fi
+  fi
+
+  if [[ $DO_THEME -eq 1 ]]; then
+    printf "$INFO_SLUG Rebuilding theme...\n"
+    cd ${THEME_PATH}
+    npm install
+    npm run build:drupal
+  fi
 fi
 

@@ -16,7 +16,7 @@ image:
   # repository: PUT_REPO_AND_IMAGE_PATH_HERE
   # tag: latest
   pullPolicy: Always
-  build: docksal/cli:2.6-php7.1
+  cli: docksal/cli:2.6-php7.1
 service:
   name: http
   type: ClusterIP
@@ -30,20 +30,20 @@ ingress:
     # ingress.url.project=${PROJECT_NAME}
     # project: "PROJECT_NAME"
   annotations:
-    # Use the following line for full public access to your CI environments.
+    # Use this for public environments.
     kubernetes.io/ingress.class: traefik
-    # Use the following three lines to protect access to CI enviroments being
-    # nginx proxy firewall.
-#    kubernetes.io/ingress.class: "nginx"
-#    nginx.ingress.kubernetes.io/auth-url: "http://web-devcloud-proxy.devcloud-proxy.svc.cluster.local/"
-#    nginx.ingress.kubernetes.io/auth-signin: "http://login.proxyapp.kube.p2devcloud.com/"
+    # Use the following 3 lines to use the proxy server for private environments.
+    #kubernetes.io/ingress.class: "nginx"
+    #nginx.ingress.kubernetes.io/auth-url: "http://web-devcloud-proxy.devcloud-proxy.svc.cluster.local/"
+    #nginx.ingress.kubernetes.io/auth-signin: "http://login.proxyapp.kube.p2devcloud.com/"
 env:
+  # The following can be overridden by env-values.sh
   docroot: /var/www/build/docroot
   phpMaxExecutionTime: 60
   # Note: This only affects PHP memory in Apache.  To change PHP command line
   # change the .gitlab-ci/99-project-php-settings.ini file
   phpMemoryLimit: 256M
-  # env.tier=${PROJECT_TIER}
+  # env.tier=${PROJECT_ENV}
   # tier: "dev"
 
 ## Enable persistence using Persistent Volume Claims
@@ -103,3 +103,9 @@ mariadb:
   resources:
     requests:
       cpu: 100m
+
+##
+## Memcached sub-chart configuration
+##
+memcached:
+  replicaCount: 1

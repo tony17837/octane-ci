@@ -35,6 +35,10 @@ node_modules
 # Local test configurations
 /project/tests/behat.local.yml
 
+# Scaffolded files
+/project/sites/default/default.services.yml
+/project/sites/default/default.settings.php
+
 #NPM
 npm-debug.log
 

@@ -2,10 +2,14 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ template "chart.fullname" . }}-common-config
+  labels:
+    app: {{ template "chart.name" . }}
+    release: {{ .Release.Name }}
 data:
    BUILD_ID: {{ default "build-0" .Values.build_id | quote }}
    DOCROOT: {{ default "" .Values.env.docroot | quote }}
-   PROJECT_TIER: {{ default "" .Values.env.tier | quote }}
+   PROJECT_ENV: {{ default "" .Values.env.tier | quote }}
+   CI: "true"
    PHP_MAX_EXECUTION_TIME: {{ default "60" .Values.env.phpMaxExecutionTime | quote }}
    PHP_MEMORY_LIMIT: {{ default "256m" .Values.env.phpMemoryLimit | quote }}
    MEMCACHED_HOST: {{ template "chart.memcached.fullname" . }}

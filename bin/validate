@@ -4,6 +4,8 @@
 # All tools are available, but there isn't any Drupal site or database.
 #: exec_target = cli
 
+set -e
+
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
   source ~/.profile
@@ -41,5 +43,3 @@ if [ -e ${THEME_PATH}/apps/drupal ]; then
   printf "$INFO_SLUG Checking SCSS style...\n"
   npm run lint:scss
 fi
-
-
