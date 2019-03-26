@@ -32,6 +32,10 @@ node_modules
 /project/sites/default/services.local.yml
 /project/sites/default/settings.local.php
 
+# Scaffolded files
+/project/sites/default/default.services.yml
+/project/sites/default/default.settings.php
+
 #NPM
 npm-debug.log
 
