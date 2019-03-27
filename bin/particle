@@ -11,7 +11,7 @@ source ~/.profile
 # So count the number of files in the theme to see if there are more than
 # just cached node_modules and package-lock.json.
 FILE_COUNT=`ls -a1 ${THEME_PATH} | wc -l | tr -d ' '`
-if [ $FILE_COUNT -le 22 ]; then
+if [ $FILE_COUNT -le 2 ]; then
   printf "$INFO_SLUG Downloading and installing Particle...\n"
   # Clear the directory for npx to install.
   rm -rf ${THEME_PATH}
