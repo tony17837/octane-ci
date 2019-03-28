@@ -32,8 +32,7 @@ if [[ -z "$DTT_BASE_URL" ]]; then
 fi
 
 if [[ -z "$BEHAT_PARAMS" ]]; then
-  # @todo An export is required here for some reason but not on the others?
-  export BEHAT_PARAMS='{"extensions" : {"Drupal\\MinkExtension" : {"base_url" : "'${DTT_BASE_URL}'"}}}'
+  export BEHAT_PARAMS='{"extensions" : {"Drupal\\MinkExtension" : {"base_url" : "'${DTT_BASE_URL}'"}, "Drupal\\DrupalExtension" : {"drupal" : {"drupal_root" : "/var/www/'${REL_DOCROOT}'"}}}}'
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
