@@ -26,7 +26,7 @@
         "drupal/coder": "^8.2.12",
         "drupal/console": "^1.8",
         "drupal/devel": "^1.0",
-        "drupal/drupal-extension": "^3.4.0",
+        "drupal/drupal-extension": "^4.0",
         "drush/drush": "^9",
         "jcalderonzumba/gastonjs": "^1.0.2",
         "jcalderonzumba/mink-phantomjs-driver": "^0.3.1",
@@ -38,7 +38,8 @@
         "symfony/css-selector": "^3.4.0",
         "symfony/phpunit-bridge": "^3.4.3",
         "symfony/debug": "^3.4.0",
-        "weitzman/drupal-test-traits": "~1.0"
+        "weitzman/drupal-test-traits": "~1.0",
+        "jakub-onderka/php-parallel-lint": "^1.0"
     },
     "require": {
         "acquia/lightning": "^4.0@alpha",
@@ -78,6 +79,7 @@
             "@drupal-scaffold"
         ],
         "test:unit": "phpunit -c project/tests/phpunit.xml --printer '\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter'",
+        "test:behat": "behat -c project/tests/behat.yml -fprogress",
         "test": [
             "@test:unit"
         ],
