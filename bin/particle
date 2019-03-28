@@ -10,6 +10,8 @@ source ~/.profile
 # Can't just check for ${THEME_PATH} since node_modules might be cached.
 # So count the number of files in the theme to see if there are more than
 # just cached node_modules and package-lock.json.
+echo "Files in ${THEME_PATH}"
+ls -a1 ${THEME_PATH}
 FILE_COUNT=`ls -a1 ${THEME_PATH} | wc -l | tr -d ' '`
 if [ $FILE_COUNT -le 2 ]; then
   printf "$INFO_SLUG Downloading and installing Particle...\n"
