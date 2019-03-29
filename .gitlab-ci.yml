@@ -139,8 +139,6 @@ validate_branch:
     - kubectl get secret gitlab-registry-secret || kubectl create secret docker-registry gitlab-registry-secret --docker-server=${CI_REGISTRY} --docker-username=${CI_DEPLOY_USER} --docker-password=${CI_DEPLOY_PASSWORD} --docker-email=${GITLAB_USER_EMAIL}
     # Download chart dependencies.
     - helm dependency build .gitlab-ci/chart
-    # Do the deployment and output all the YAML resources deployed for this release.
-    - helm version
     # Create env configMap from .env file.
     #   Remove the quotes around values since kubectl expects simple key=value
     - cat .env | tr -d "\"" >.gitlab-ci/.env
