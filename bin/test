@@ -6,9 +6,15 @@
 
 set -e
 
+# Allow for usage outside of containers for unit tests.
+if [[ -z "$PROJECT_ROOT" ]]; then
+  # Logic via https://stackoverflow.com/a/246128.
+  PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/.."
+fi
+
 # Define default test commands.
-PHPUNIT_COMMAND="vendor/bin/phpunit -c /var/www/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
-BEHAT_COMMAND="vendor/bin/behat -c project/tests/behat.yml -fprogress"
+PHPUNIT_COMMAND="${PROJECT_ROOT}/vendor/bin/phpunit -c ${PROJECT_ROOT}/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
+BEHAT_COMMAND="${PROJECT_ROOT}vendor/bin/behat -c ${PROJECT_ROOT}/project/tests/behat.yml -fprogress"
 
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
