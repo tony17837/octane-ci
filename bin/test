@@ -6,18 +6,19 @@
 
 set -e
 
+# Allow for usage outside of containers for unit tests.
+if [[ -z "$PROJECT_ROOT" ]]; then
+  # Logic via https://stackoverflow.com/a/246128.
+  PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/.."
+fi
+
+# Define default test commands.
+PHPUNIT_COMMAND="${PROJECT_ROOT}/vendor/bin/phpunit -c ${PROJECT_ROOT}/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
+BEHAT_COMMAND="${PROJECT_ROOT}vendor/bin/behat -c ${PROJECT_ROOT}/project/tests/behat.yml -fprogress"
+
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
   source ~/.profile
-fi
-
-# Check to see if Drupal is already installed.
-DRUPAL_BOOTSTRAP=`drush status --fields=bootstrap 2> /dev/null`
-if [ -z "$DRUPAL_BOOTSTRAP" ]; then
-  # No Drupal db, so use sqlite for test.
-  export SIMPLETEST_DB="sqlite://localhost//tmp/db.sqlite"
-elif [[ ! -z "$MYSQL_USER" && -z "$SIMPLETEST_DB" ]]; then
-  export SIMPLETEST_DB="mysql://${MYSQL_USER:-user}:${MYSQL_PASSWORD:-user}@${MYSQL_HOST:-db}/${MYSQL_DATABASE:-default}"
 fi
 
 # Set default testing URL for web host.
@@ -40,27 +41,32 @@ if [[ ! -z "$1" && -z "$2" ]]; then
   printf "$INFO_SLUG Running $1 tests...\n"
   if [[ "$1" == "behat" ]]; then
     # Run Behat.
-    vendor/bin/behat -c project/tests/behat.yml -fprogress
+    $BEHAT_COMMAND
   else
-    composer test -- --testsuite $1
+    $PHPUNIT_COMMAND --testsuite $1
   fi
+elif [[ ! -z "$2" && "$1" == "behat" ]]; then
+  # Multiple arguments for behat.
+  printf "$INFO_SLUG Running Behat tests...\n"
+  $BEHAT_COMMAND ${@:2}
 elif [ ! -z "$2" ]; then
   # Multiple arguments, pass to phpunit.
   printf "$INFO_SLUG Running tests...\n"
-  composer test -- $@
+  $PHPUNIT_COMMAND $@
 else
   # Run all non-unit tests.
+  printf "$INFO_SLUG Preparing to run all tests...\n\n"
   # Unit tests are run in a separate job before the build is deployed.
   printf "$INFO_SLUG Running Kernel tests...\n"
-  composer test -- --testsuite kernel
+  $PHPUNIT_COMMAND --testsuite kernel
   printf "$INFO_SLUG Running Functional tests...\n"
-  composer test -- --testsuite functional
+  $PHPUNIT_COMMAND --testsuite functional
   printf "$INFO_SLUG Running Functional-Javascript tests...\n"
-  composer test -- --testsuite functional-javascript
+  $PHPUNIT_COMMAND --testsuite functional-javascript
   printf "$INFO_SLUG Running ExistingSite tests...\n"
-  composer test -- --testsuite existing-site
+  $PHPUNIT_COMMAND --testsuite existing-site
 
   # Run all Behat tests
   printf "$INFO_SLUG Running Behat tests...\n"
-  vendor/bin/behat -c project/tests/behat.yml -fprogress
+  $BEHAT_COMMAND
 fi
