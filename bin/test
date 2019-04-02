@@ -33,7 +33,7 @@ if [[ -z "$DTT_BASE_URL" ]]; then
 fi
 
 if [[ -z "$BEHAT_PARAMS" ]]; then
-  export BEHAT_PARAMS='{"extensions" : {"Drupal\\MinkExtension" : {"base_url" : "'${DTT_BASE_URL}'"}, "Drupal\\DrupalExtension" : {"drupal" : {"drupal_root" : "/var/www/'${REL_DOCROOT}'"}}}}'
+  export BEHAT_PARAMS='{"extensions" : {"Drupal\\MinkExtension" : {"base_url" : "'${DTT_BASE_URL}'"}, "Drupal\\DrupalExtension" : {"drupal" : {"drupal_root" : "'${PROJECT_ROOT}'/'${REL_DOCROOT}'"}}}}'
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
@@ -66,7 +66,9 @@ else
   printf "$INFO_SLUG Running ExistingSite tests...\n"
   $PHPUNIT_COMMAND --testsuite existing-site
 
-  # Run all Behat tests
-  printf "$INFO_SLUG Running Behat tests...\n"
-  $BEHAT_COMMAND
+  if [[ -e ${PROJECT_ROOT}/project/tests/behat.yml ]]; then
+    # Run all Behat tests
+    printf "$INFO_SLUG Running Behat tests...\n"
+    $BEHAT_COMMAND
+  fi
 fi
