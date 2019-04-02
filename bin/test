@@ -22,9 +22,7 @@ if [ -e ~/.profile ]; then
 fi
 
 # Set default testing URL for web host.
-if [[ ! -z "$VIRTUAL_HOST" && -z "$SIMPLETEST_BASE_URL" ]]; then
-  export SIMPLETEST_BASE_URL=http://${VIRTUAL_HOST}
-elif [[ -z "$SIMPLETEST_BASE_URL" ]]; then
+if [[ ! -z "$CI" && -z "$SIMPLETEST_BASE_URL" ]]; then
   export SIMPLETEST_BASE_URL=http://localhost
 fi
 # Set default ExistingSite test URL for web host.
