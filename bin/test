@@ -12,14 +12,26 @@ if [[ -z "$PROJECT_ROOT" ]]; then
   PROJECT_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )/.."
 fi
 
+# Determine the web user.  PHPUnit must run as this user to access the files.
+if [ -z $WEB_USER ]; then
+  WEB_USER=`ls -ld ${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files | awk '{print $3}'`
+  case $WEB_USER in
+    ''|*[0-9]*) WEB_USER="#${WEB_USER}" ;;
+  esac
+fi
 # Define default test commands.
-PHPUNIT_COMMAND="${PROJECT_ROOT}/vendor/bin/phpunit -c ${PROJECT_ROOT}/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
+PHPUNIT_COMMAND="sudo -u ${WEB_USER} -E ${PROJECT_ROOT}/vendor/bin/phpunit -c ${PROJECT_ROOT}/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
+
 BEHAT_COMMAND="${PROJECT_ROOT}/vendor/bin/behat -c ${PROJECT_ROOT}/project/tests/behat.yml -fprogress"
 
 # Init the tools like npm within the cli container
 if [ -e ~/.profile ]; then
   source ~/.profile
 fi
+
+# Set DB for testing.  Using SQLite to avoid installing simpletest.
+# SQLite DB must be in files folder to be shared between containers.
+export SIMPLETEST_DB="sqlite://localhost//${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files/db.sqlite"
 
 # Set default testing URL for web host.
 if [[ ! -z "$CI" && -z "$SIMPLETEST_BASE_URL" ]]; then
