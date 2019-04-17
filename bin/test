@@ -40,7 +40,11 @@ export SIMPLETEST_DB="sqlite://localhost//${PROJECT_ROOT}/${REL_DOCROOT}/sites/d
 # Set default testing URL for web host.
 if [[ ! -z "$CI" && -z "$SIMPLETEST_BASE_URL" ]]; then
   export SIMPLETEST_BASE_URL=http://localhost
+elif [[ ! -z "${VIRTUAL_HOST}" ]]; then
+  # Use the virtual host if available so debugging urls resolve locally instead of to 'web'.
+  export SIMPLETEST_BASE_URL="http://${VIRTUAL_HOST}"
 elif [[ -z "$SIMPLETEST_BASE_URL" ]]; then
+  # Fallback to 'web' if for whatever reason this isn't Docksal or CI.
   export SIMPLETEST_BASE_URL=http://web
 fi
 # Set default ExistingSite test URL for web host.
@@ -70,17 +74,10 @@ elif [ ! -z "$2" ]; then
   printf "$INFO_SLUG Running tests...\n"
   $PHPUNIT_COMMAND $@
 else
-  # Run all non-unit tests.
-  printf "$INFO_SLUG Preparing to run all tests...\n\n"
-  # Unit tests are run in a separate job before the build is deployed.
-  printf "$INFO_SLUG Running Kernel tests...\n"
-  $PHPUNIT_COMMAND --testsuite kernel
-  printf "$INFO_SLUG Running Functional tests...\n"
-  $PHPUNIT_COMMAND --testsuite functional
-  printf "$INFO_SLUG Running Functional-Javascript tests...\n"
-  $PHPUNIT_COMMAND --testsuite functional-javascript
-  printf "$INFO_SLUG Running ExistingSite tests...\n"
-  $PHPUNIT_COMMAND --testsuite existing-site
+  # Run functional and JS functional tests. Kernel and unit tests are run in an
+  # earlier step in the CI environment.
+  printf "$INFO_SLUG Preparing to run existing-site and functional tests...\n\n"
+  $PHPUNIT_COMMAND --testsuite existing-site,functional,functional-javascript
 
   if [[ -e ${PROJECT_ROOT}/project/tests/behat.yml ]]; then
     # Run all Behat tests
