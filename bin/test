@@ -35,7 +35,12 @@ fi
 
 # Set DB for testing.  Using SQLite to avoid installing simpletest.
 # SQLite DB must be in files folder to be shared between containers.
-export SIMPLETEST_DB="sqlite://localhost//${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files/db.sqlite"
+# For kernel tests, this directory doesn't exist, so it uses the default
+# set in phpunit.xml.
+SQLITE_PATH="${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files"
+if [ -w  "${SQLITE_PATH}" ]; then
+  export SIMPLETEST_DB="sqlite://localhost//${SQLITE_PATH}/db.sqlite"
+fi
 
 # Set default testing URL for web host.
 if [[ ! -z "$CI" && -z "$SIMPLETEST_BASE_URL" ]]; then

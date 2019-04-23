@@ -110,7 +110,7 @@ validate_branch:
     # Run linting etc.
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     # Run unit tests.
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit,kernel
   cache:
     # Pull the cache from the "test" branch.
     key: ${PROJECT_NAME}-test
