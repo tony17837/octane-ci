@@ -12,7 +12,7 @@ if [ -e ~/.profile ]; then
 fi
 
 printf "$INFO_SLUG Checking PHP syntax...\n"
-vendor/bin/parallel-lint project
+vendor/bin/parallel-lint --exclude project/themes/*/vendor --exclude project/themes/*/*/*/pattern-lab project
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
