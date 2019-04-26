@@ -65,10 +65,10 @@ fi
 SIMPLETEST_OUTPUT=${PROJECT_ROOT}/${REL_DOCROOT}/sites/simpletest
 if [[ ! -e $SIMPLETEST_OUTPUT ]]; then
   mkdir -p ${SIMPLETEST_OUTPUT}/browser_output
-  chmod -R 775 $SIMPLETEST_OUTPUT
-  chown -R $WEB_USER:$WEB_USER $SIMPLETEST_OUTPUT
-  ls -al $SIMPLETEST_OUTPUT
 fi
+chmod -R 775 $SIMPLETEST_OUTPUT
+chown -R $WEB_USER:$WEB_USER $SIMPLETEST_OUTPUT
+ls -al $SIMPLETEST_OUTPUT
 
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
