@@ -67,6 +67,7 @@ if [[ ! -e $SIMPLETEST_OUTPUT ]]; then
   mkdir -p ${SIMPLETEST_OUTPUT}/browser_output
   chmod -R 775 $SIMPLETEST_OUTPUT
   chown -R $WEB_USER:$WEB_USER $SIMPLETEST_OUTPUT
+  ls -al $SIMPLETEST_OUTPUT
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
