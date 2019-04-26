@@ -4,7 +4,7 @@
 # This is run within the Build/CLI container, so has all the tools.
 #: exec_target = cli
 
-set -e
+set -ev
 
 # Allow for usage outside of containers for unit tests.
 if [[ -z "$PROJECT_ROOT" ]]; then
