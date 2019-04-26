@@ -4,7 +4,7 @@
 # This is run within the Build/CLI container, so has all the tools.
 #: exec_target = cli
 
-set -ev
+set -e
 
 # Allow for usage outside of containers for unit tests.
 if [[ -z "$PROJECT_ROOT" ]]; then
@@ -68,7 +68,6 @@ if [[ ! -e $SIMPLETEST_OUTPUT ]]; then
 fi
 chmod -R 775 $SIMPLETEST_OUTPUT
 chown -R $WEB_USER:$WEB_USER $SIMPLETEST_OUTPUT
-ls -al $SIMPLETEST_OUTPUT
 
 if [[ ! -z "$1" && -z "$2" ]]; then
   # Single argument is testsuite.
