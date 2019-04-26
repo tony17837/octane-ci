@@ -62,10 +62,10 @@ if [[ -z "$BEHAT_PARAMS" ]]; then
 fi
 
 # This folder is hard-coded in core for ExistingSite tests, be sure it exists.
-SIMPLETEST_OUTPUT=${PROJECT_ROOT}/${REL_DOCROOT}/sites/simpletest/browser_output
+SIMPLETEST_OUTPUT=${PROJECT_ROOT}/${REL_DOCROOT}/sites/simpletest
 if [[ ! -e $SIMPLETEST_OUTPUT ]]; then
-  mkdir -p $SIMPLETEST_OUTPUT
-  chmod 775 $SIMPLETEST_OUTPUT
+  mkdir -p $SIMPLETEST_OUTPUT/browser_output
+  chmod -R 775 $SIMPLETEST_OUTPUT
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
