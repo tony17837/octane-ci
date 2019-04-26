@@ -18,10 +18,10 @@ if [ -e ${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files ]; then
   if [ -z $WEB_USER ]; then
     WEB_USER=`ls -ld ${PROJECT_ROOT}/${REL_DOCROOT}/sites/default/files | awk '{print $3}'`
   fi
-  case $WEB_USER in
-    ''|*[0-9]*) WEB_USER="#${WEB_USER}" ;;
-  esac
   SUDO="sudo -u ${WEB_USER} -E "
+  case $WEB_USER in
+    ''|*[0-9]*) SUDO="sudo -u #${WEB_USER} -E " ;;
+  esac
 fi
 # Define default test commands.
 PHPUNIT_COMMAND="${SUDO}${PROJECT_ROOT}/vendor/bin/phpunit -c ${PROJECT_ROOT}/project/tests/phpunit.xml --printer \\Drupal\\Tests\\Listeners\\HtmlOutputPrinter"
@@ -64,8 +64,9 @@ fi
 # This folder is hard-coded in core for ExistingSite tests, be sure it exists.
 SIMPLETEST_OUTPUT=${PROJECT_ROOT}/${REL_DOCROOT}/sites/simpletest
 if [[ ! -e $SIMPLETEST_OUTPUT ]]; then
-  mkdir -p $SIMPLETEST_OUTPUT/browser_output
+  mkdir -p ${SIMPLETEST_OUTPUT}/browser_output
   chmod -R 775 $SIMPLETEST_OUTPUT
+  chown -R $WEB_USER:$WEB_USER $SIMPLETEST_OUTPUT
 fi
 
 if [[ ! -z "$1" && -z "$2" ]]; then
