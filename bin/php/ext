@@ -9,10 +9,12 @@ usage() {
 
 toggle_on() {
   sudo su -c "sed -ri 's/^[#;]((zend_)?extension)/\1/' ${EXTENSION_PATH}"
+  echo "${EXTENSION} on"
 }
 
 toggle_off() {
   sudo su -c "sed -ri 's/^((zend_)?extension)/#\1/' ${EXTENSION_PATH}"
+  echo "${EXTENSION} off"
 }
 
 restart_php_fpm() {
