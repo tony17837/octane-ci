@@ -16,7 +16,7 @@ vendor/bin/parallel-lint --exclude project/themes/*/vendor --exclude project/the
 
 printf "$INFO_SLUG Checking PHP Code style...\n"
 # PHPCS here.
-PHPCS_PATHS="project/profiles project/modules project/tests/contexts"
+PHPCS_PATHS="project/profiles project/modules project/tests"
 if [ -e ${THEME_PATH}/apps/drupal ]; then
   PHPCS_PATHS="${PHPCS_PATHS} ${THEME_PATH}/apps/drupal"
 fi
