@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Scaffold the Octane-based project.
-# This script runs within the Build container, so all tools are available.
+## Initializes Particle
+##
+## This script runs within the Build container, so all tools are available.
 #: exec_target = cli
 
 # Init the tools like npm within the cli container

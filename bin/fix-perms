@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
+## Fix file permissions
 ##
-# Fix File Permissions
-#
-# Some of the file permissions are broken or mis-aligned as a result
-# of the various Docker and filesystem layers.
-#
-# Paths used align with the volume mappings in the docker-compose
-# and build configuration files.
+## Some of the file permissions are broken or mis-aligned as a result
+## of the various Docker and filesystem layers.
+##
+## Paths used align with the volume mappings in the docker-compose
+## and build configuration files.
 ##
 #: exec_target = cli
 

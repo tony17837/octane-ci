@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
-# Run all the linting tools for the project
-# This runs within the Build/CLI container but before site is built.
-# All tools are available, but there isn't any Drupal site or database.
+## Run all the linting tools for the project
+##
+## Usage: fin validate
+##
+## This runs within the Build/CLI container but before site is built.
+## All tools are available, but there isn't any Drupal site or database.
 #: exec_target = cli
 
 set -e

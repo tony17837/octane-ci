@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Toggles xdebug on|off.
+## Toggles xdebug on|off.
+##
+## Usage: fin php/xdebug on|off
 #: exec_target = cli
 
 set -e
