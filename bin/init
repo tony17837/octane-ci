@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# This script is only intended to be run via "fin"
+## Initializes the project
+##
+## This script is only intended to be run via "fin"
 
 # Initialize stack.
 fin project start

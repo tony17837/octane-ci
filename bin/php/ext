@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Toggles a given PHP extension (most commonly xdebug).
+## Toggles a given PHP extension (most commonly xdebug).
+##
+## Usage: fin php/ext xhprof on|off
 #: exec_target = cli
 
 usage() {
