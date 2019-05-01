@@ -32,11 +32,6 @@ fi
 
 if [[ $DO_COMPOSER -eq 1 ]]; then
   printf "$INFO_SLUG Installing composer dependencies...\n"
-  if [[ -e composer.lock && ! -e vendor ]]; then
-    # First time project creation, remove old composer lock file.
-    printf "$INFO_SLUG Clearing previous composer lock...\n"
-    rm -rf composer.lock
-  fi
   # Install project dependencies from composer.
   # Uncomment the following command if you want to continue building if patches
   # fail to apply.
