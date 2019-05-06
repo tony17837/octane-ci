@@ -6,12 +6,8 @@
 # Initialize stack.
 fin project start
 
-# First time project creation, remove old Octane composer lock file.
-# Allows project to have its own lock file.
-rm -rf composer.lock
-
 # Run the common init script within the cli container.
-fin exec bin/init.sh -y
+fin exec bin/build -y
 
 # Install initial site.
 fin exec bin/install -y
