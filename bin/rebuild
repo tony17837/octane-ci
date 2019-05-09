@@ -19,7 +19,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Build composer, build theme, etc.
-bin/build $CONFIRM
+bin/make $CONFIRM
 
 # Run updates, clear cache, etc.
 bin/import $CONFIRM

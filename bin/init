@@ -7,7 +7,7 @@
 fin project start
 
 # Run the common init script within the cli container.
-fin exec bin/build -y
+fin exec bin/make -y
 
 # Install initial site.
 fin exec bin/install -y

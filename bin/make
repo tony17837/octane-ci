@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ## Build the codebase via composer and npm
 ##
-## Usage: fin build
+## Usage: fin make
 
 # This runs within the CLI container, so all tools are available.
 #: exec_target = cli

@@ -58,7 +58,7 @@ build:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/build -y
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
     # bundle it into a docker image
     - cp .gitlab-ci/Dockerfile Dockerfile
     # Use previous build as cache for performance.
@@ -106,7 +106,7 @@ validate_branch:
   stage: validate
   script:
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/build -y
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
     # Run linting etc.
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     # Run unit tests.
