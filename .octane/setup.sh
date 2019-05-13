@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 ## First time project setup.
-## Called from both GitLab CI and via "fin init" for new projects.
+## Called from both GitLab CI and via Generate for new projects.
 
 set -e
 
-# Install Particle theme.
+# Install Particle.
 .octane/particle.sh
 
