@@ -79,6 +79,8 @@
             "@project-scaffold",
             "@drupal-scaffold"
         ],
+        "phpcs": "phpcs --standard=project/tests/.phpcs.xml --report-full --colors",
+        "phpcbf": "phpcbf --standard=project/tests/.phpcs.xml --colors",
         "test:unit": "phpunit -c project/tests/phpunit.xml --printer '\\Drupal\\Tests\\Listeners\\HtmlOutputPrinter'",
         "test:behat": "behat -c project/tests/behat.yml -fprogress",
         "test": [

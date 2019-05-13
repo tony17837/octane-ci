@@ -155,7 +155,7 @@ validate_branch:
     # Send helm manifests to kubectl to create/update the pods.
     - kubectl apply --recursive --filename .gitlab-ci/manifests
     # Wait for pods to become available.
-    - .gitlab-ci/wait-until-pods-ready.sh ${KUBE_NAMESPACE}
+    - .gitlab-ci/wait-until-pods-ready.sh ${PROJECT_NAME} ${CI_COMMIT_REF_SLUG}
     # Add any post-deploy commands here, such as flowdock notifications
     # - ./.gitlab-ci/flowdock-notify.sh "Deployment complete for ${CI_COMMIT_TITLE} to ${CI_ENVIRONMENT_URL}"
 
