@@ -55,11 +55,13 @@ before_script:
 build:
   stage: build
   script:
-    # Login so we can push images to the registry
+    # Login so we can push images to the registry.
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    # assemble the codebase
+    # Initial setup if this is Octane.
+    - if [ -e .octane/setup.sh ]; then docker-compose -f .gitlab-ci/build.yml run --rm base .octane/setup.sh; fi
+    # Assemble the codebase
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
-    # bundle it into a docker image
+    # Bundle it into a docker image.
     - cp .gitlab-ci/Dockerfile Dockerfile
     # Use previous build as cache for performance.
     - docker build --cache-from ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG} -t ${WEB_IMAGE}:${CI_COMMIT_SHA} .

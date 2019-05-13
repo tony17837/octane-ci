@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
-## Initializes the project
+## Initializes the project.
+## Creates a new project if run for the first time.
 ##
-## This script is only intended to be run via "fin"
+## This script is ONLY intended to be run via "fin init"
+
+# Re-declared here since this is run outside the container.
+INFO_SLUG="\033[33m[INFO]\033[0m"
+
+set -e
 
 # Initialize stack.
 fin project start
 
-# Run the common init script within the cli container.
+# If .octane folder exists, perform new project initialization.
+if [ -e ".octane/setup.sh" ]; then
+  printf "${INFO_SLUG} Removing Octane-specific lock file...\n"
+  rm -rf composer.lock
+  printf "${INFO_SLUG} Setup new project...\n"
+  fin exec .octane/setup.sh
+  # Remove .octane folder to prevent new project the next time.
+  printf "${INFO_SLUG} Removing Octane-specific setup files...\n"
+  rm -rf .octane
+fi
+
+# Build the codebase.
 fin exec bin/make -y
 
 # Install initial site.
