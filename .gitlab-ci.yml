@@ -203,7 +203,21 @@ deploy:
 #   only:
 #     # Set the branch for the environment here.
 #     - /^BRANCH/
-
+deploy_feature:
+  stage: tasks
+  environment:
+    # Cannot use environment variables here, only gitlab variables.
+    name: feature-${CI_COMMIT_SHORT_SHA}
+    url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
+  <<: *deploy_script
+  cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifest
+    paths:
+      - .gitlab-ci/manifests
+  only:
+    # Set the branch for the environment here.
+    - /^feature/
+  when: manual
 
 # Update the environment.
 # Installs Drupal if needed, runs update hooks, config-import, clear-cache.
@@ -238,6 +252,20 @@ test:
     - /^develop/
     - /^master/
 
+# Install and test a feature branch manually.
+test_feature:
+  stage: tasks
+  environment:
+    name: feature-${CI_COMMIT_SHORT_SHA}
+  script:
+    # Fresh install for feature branches being tested.
+    - ./.gitlab-ci/exec.sh cli /var/www/bin/install -y
+    - ./.gitlab-ci/exec.sh cli /var/www/bin/test
+  only:
+    # Set the branch for the environment here.
+    - /^feature/
+  when: manual
+
 # Manual task to reinstall Drupal when needed.
 install:
   stage: tasks
@@ -253,7 +281,7 @@ install:
   when: manual
 
 # Purge the Kubernetes environment manually when needed.
-clean_up:
+x_destroy_env:
   stage: tasks
   environment:
     # Cannot use environment variables here, only gitlab variables.
@@ -261,7 +289,6 @@ clean_up:
     name: ${CI_COMMIT_REF_SLUG}
     url: http://www.${CI_COMMIT_REF_SLUG}.${PROJECT_NAME}.kube.p2devcloud.com
   script:
-    - ls -al .gitlab-ci
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
   cache:
@@ -271,8 +298,25 @@ clean_up:
   only:
     - /^qa/
     - /^test/
-    - /^develop/
-    - /^master/
+  when: manual
+
+# Purge the feature branch Kubernetes environment manually when needed.
+x_destroy_feature:
+  stage: tasks
+  environment:
+    # Cannot use environment variables here, only gitlab variables.
+    # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
+    name: feature-${CI_COMMIT_SHORT_SHA}
+    url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
+  script:
+    # Remove everything that was deployed for this environment.
+    - kubectl delete --recursive --filename .gitlab-ci/manifests
+  cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifest
+    paths:
+      - .gitlab-ci/manifests
+  only:
+    - /^feature/
   when: manual
 
 # Notify when pipeline succeeds.
