@@ -50,10 +50,8 @@ before_script:
   # Define project-specific environment variables.
   - source .env
 
-# This job builds the code base pushes a docker image to the GitLab registry.
-# This is only needed if we will spin up a K8S environment for the image.
-build:
-  stage: build
+# Common script to build the code base and push a docker image to registry.
+.build_script: &build_script
   script:
     # Login so we can push images to the registry
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
@@ -70,6 +68,12 @@ build:
     - docker push ${WEB_IMAGE}:${CI_COMMIT_SHA}
     - docker push ${WEB_IMAGE}:${CI_COMMIT_REF_SLUG}
     # - ./.gitlab-ci/flowdock-notify.sh "Build of ${CI_COMMIT_REF_NAME} complete for ${CI_COMMIT_TITLE}"
+
+# This job builds the code base pushes a docker image to the GitLab registry.
+# This is only needed if we will spin up a K8S environment for the image.
+build:
+  stage: build
+  <<: *build_script
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
@@ -81,6 +85,19 @@ build:
     - /^test/
     - /^develop/
     - /^master/
+
+build_feature:
+  stage: tasks
+  <<: *build_script
+  cache:
+    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+    paths:
+      - build
+      - vendor
+      - project/themes/*/node_modules
+  only:
+    - /^feature/
+  when: manual
 
 # Run validation (linting) and unit tests on already built codebase.
 validate:
@@ -129,6 +146,7 @@ validate_branch:
   script:
     # Display versions of docker, etc. Comes from gitlab-ci-workspace container.
     - /versions.sh
+    - ls -al
     # Remove any previous manifests from cache.
     - rm -rf .gitlab-ci/manifests
     - mkdir .gitlab-ci/manifests
@@ -142,7 +160,7 @@ validate_branch:
     # Create env configMap from .env file.
     #   Remove the quotes around values since kubectl expects simple key=value
     - cat .env | tr -d "\"" >.gitlab-ci/.env
-    - kubectl create configmap ${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config --from-env-file=.gitlab-ci/.env -o yaml --dry-run > .gitlab-ci/manifests/${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config.yaml
+    - kubectl create configmap ${RELEASE_NAME}-env-config --from-env-file=.gitlab-ci/.env -o yaml --dry-run > .gitlab-ci/manifests/${RELEASE_NAME}-env-config.yaml
     # Create additional values from environment.
     - .gitlab-ci/env-values.sh > .gitlab-ci/env-values.yaml
     # Generate the manifests from the chart templates.
@@ -205,6 +223,8 @@ deploy:
 #     - /^BRANCH/
 deploy_feature:
   stage: tasks
+  variables:
+    RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
   environment:
     # Cannot use environment variables here, only gitlab variables.
     name: feature-${CI_COMMIT_SHORT_SHA}
