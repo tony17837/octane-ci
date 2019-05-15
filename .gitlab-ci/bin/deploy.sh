@@ -43,4 +43,4 @@ rm -f .gitlab-ci/manifests/chart/charts/mariadb/templates/tests.yaml
 kubectl apply --recursive --filename .gitlab-ci/manifests
 
 # Wait for pods to become available.
-.gitlab-ci/bin/pods-ready.sh ${PROJECT_NAME} ${CI_COMMIT_REF_SLUG}
+.gitlab-ci/bin/pods-ready.sh ${RELEASE_NAME}
