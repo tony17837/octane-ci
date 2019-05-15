@@ -3,6 +3,8 @@
 # When calling this script, be sure to set the "environment:" values.
 # Called from .gitlab-ci.yml in the "deploy" stage
 
+set -ex
+
 # Display versions of docker, etc. Comes from gitlab-ci-workspace container.
 /versions.sh
 

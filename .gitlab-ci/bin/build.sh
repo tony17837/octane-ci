@@ -2,6 +2,8 @@
 # Common script to build the code base and push a docker image to registry.
 # Called from .gitlab-ci.yml in the "build" stage
 
+set -ex
+
 # Login so we can push images to the registry
 docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
