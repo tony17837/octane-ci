@@ -8,4 +8,4 @@ if [ -z ${GITDIR} ]; then
   exit 1
 fi
 
-docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git lab $@
+docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git outrigger/lab $@
