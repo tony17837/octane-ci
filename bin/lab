@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Wrapper around the https://github.com/zaquestion/lab GitLab CLI
+# Uses the phase2/lab docker container
+
+GITDIR=$(git rev-parse --show-toplevel)
+if [ -z ${GITDIR} ]; then
+  echo "Cannot find a git repository"
+  exit 1
+fi
+
+docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git lab $@
