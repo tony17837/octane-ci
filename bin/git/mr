@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# Used for wunderflow to create two MRs at the same time to two different
+# mainline branches.  Set the branch names in the .env file for project.
+
+GITDIR=$(git rev-parse --show-toplevel)
+if [ -z ${GITDIR} ]; then
+  echo "Cannot find a git repository"
+  exit 1
+fi
+
+# Read environment variables from .env file, skipping comments.
+export $(grep -v '^#' .env | xargs)
+
+# Define the command to run the "lab" cli tool
+LAB="docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git outrigger/lab"
+
+read -p "Merge Request summary?  " varDesc
+varDesc=$(echo "$varDesc" | tr '[:upper:]' '[:lower:]')
+
+FEATURE_BRANCH="$(git symbolic-ref HEAD 2>/dev/null)"
+
+$LAB mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_BRANCH:: $JIRA_NAME-$ISSUE_NUM - $varDesc"
+$LAB mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_BRANCH:: $JIRA_NAME-$ISSUE_NUM - $varDesc"
+
+
