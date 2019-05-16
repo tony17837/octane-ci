@@ -242,14 +242,6 @@ test_feature:
       - build
       - vendor
       - project/themes/*/node_modules
-  cache:
-    key: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
-    # Prevent cache from being updated/pushed.
-    policy: pull
-    paths:
-      - build
-      - vendor
-      - project/themes/*/node_modules
   only:
     # Set the branch for the environment here.
     - /^feature/
