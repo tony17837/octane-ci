@@ -8,7 +8,7 @@ set -ex
 docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
 # Initial setup if this is Octane.
-if [ -e .octane/setup.sh ]; then docker-compose -f .gitlab-ci/build.yml run --rm base .octane/setup.sh; fi
+if [[ -e .octane/setup.sh && $1 != "-skip" ]]; then docker-compose -f .gitlab-ci/build.yml run --rm base .octane/setup.sh; fi
 
 # assemble the codebase
 docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
