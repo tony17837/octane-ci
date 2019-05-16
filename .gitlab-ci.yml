@@ -27,6 +27,10 @@ variables:
   # specific to each different environment.
   PROJECT_ENV: ${CI_COMMIT_REF_SLUG}
 
+  # Specify the name of the main branch to use for building feature branches
+  # MAIN_BRANCH: master
+  MAIN_BRANCH: qa
+
 stages:
   # tasks are intended for items which are only run manually and don't need
   # a build to succeed in order to be able to execute. The idea is that they
@@ -39,6 +43,7 @@ stages:
   - update
   - test
   - notify
+  - cleanup
 
 before_script:
   # Dump some debugging so we know what variables and values we have to work with.
@@ -71,21 +76,6 @@ build:
     - /^develop/
     - /^master/
 
-build_feature:
-  stage: tasks
-  script:
-    # Call common deploy script.  Should not need to modify.
-    - .gitlab-ci/bin/build.sh
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
-    paths:
-      - build
-      - vendor
-      - project/themes/*/node_modules
-  only:
-    - /^feature/
-  when: manual
-
 # Run validation (linting) and unit tests on already built codebase.
 validate:
   stage: validate
@@ -116,8 +106,9 @@ validate_feature:
     # Run unit tests.
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/test unit,kernel
   cache:
-    # Pull the cache from the "test" branch.
-    key: ${PROJECT_NAME}-test
+    # Pull the cache from the main branch.
+    # Speeds up feature branch build so not starting from scratch.
+    key: ${PROJECT_NAME}-${MAIN_BRANCH}
     # Prevent cache from being updated/pushed.
     policy: pull
     paths:
@@ -143,8 +134,10 @@ deploy:
     - .gitlab-ci/bin/deploy.sh
     # Add any post-deploy commands here, such as flowdock notifications
     # - ./.gitlab-ci/bin/flowdock-notify.sh "Deployment complete for ${CI_COMMIT_TITLE} to ${CI_ENVIRONMENT_URL}"
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifest
+  artifacts:
+    # Save the manifests from the deployment so it can be deleted later.
+    name: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifests
+    # Don't expire these since normal environments might be long running.
     paths:
       - .gitlab-ci/manifests
   only:
@@ -179,25 +172,6 @@ deploy:
 #   only:
 #     # Set the branch for the environment here.
 #     - /^BRANCH/
-deploy_feature:
-  stage: tasks
-  variables:
-    RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
-  environment:
-    # Cannot use environment variables here, only gitlab variables.
-    name: feature-${CI_COMMIT_SHORT_SHA}
-    url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
-  script:
-    # Call common deploy script.  Should not need to modify.
-    - .gitlab-ci/bin/deploy.sh
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifest
-    paths:
-      - .gitlab-ci/manifests
-  only:
-    # Set the branch for the environment here.
-    - /^feature/
-  when: manual
 
 # Update the environment.
 # Installs Drupal if needed, runs update hooks, config-import, clear-cache.
@@ -235,9 +209,11 @@ test:
 test_feature:
   stage: tasks
   variables:
+    PROJECT_ENV: feature-${CI_COMMIT_SHORT_SHA}
     RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
   environment:
     # Cannot use environment variables here, only gitlab variables.
+    # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
     name: feature-${CI_COMMIT_SHORT_SHA}
     url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
   script:
@@ -248,13 +224,31 @@ test_feature:
     # Fresh install for feature branches being tested.
     - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/install -y
     - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/test
+  artifacts:
+    # Save the manifests from the deployment so it can be deleted later.
+    name: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}-manifests
+    # Expire these since feature-branch environments are not long-lived.
+    expire_in: 1 week
+    paths:
+      - .gitlab-ci/manifests
   cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
+    # Pull the cache from the main branch.
+    # Speeds up feature branch build so not starting from scratch.
+    key: ${PROJECT_NAME}-${MAIN_BRANCH}
+    # Prevent cache from being updated/pushed.
+    policy: pull
     paths:
       - build
       - vendor
       - project/themes/*/node_modules
-      - .gitlab-ci/manifests
+  cache:
+    key: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
+    # Prevent cache from being updated/pushed.
+    policy: pull
+    paths:
+      - build
+      - vendor
+      - project/themes/*/node_modules
   only:
     # Set the branch for the environment here.
     - /^feature/
@@ -276,7 +270,7 @@ install:
 
 # Purge the Kubernetes environment manually when needed.
 x_destroy_env:
-  stage: tasks
+  stage: cleanup
   environment:
     # Cannot use environment variables here, only gitlab variables.
     # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
@@ -285,19 +279,20 @@ x_destroy_env:
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}-manifest
-    paths:
-      - .gitlab-ci/manifests
+  dependencies:
+    # Bring in the manifest artifact
+    - deploy
   only:
     - /^qa/
     - /^test/
+  allow_failure: true
   when: manual
 
 # Purge the feature branch Kubernetes environment manually when needed.
 x_destroy_feature:
-  stage: tasks
+  stage: cleanup
   variables:
+    PROJECT_ENV: feature-${CI_COMMIT_SHORT_SHA}
     RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
   environment:
     # Cannot use environment variables here, only gitlab variables.
@@ -307,15 +302,12 @@ x_destroy_feature:
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
-  cache:
-    key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
-    paths:
-      - build
-      - vendor
-      - project/themes/*/node_modules
-      - .gitlab-ci/manifests
+  dependencies:
+    # Bring in the manifest artifact
+    - test_feature
   only:
     - /^feature/
+  allow_failure: true
   when: manual
 
 # Notify when pipeline succeeds.
