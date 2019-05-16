@@ -287,6 +287,8 @@ x_destroy_env:
   only:
     - /^qa/
     - /^test/
+    - /^develop/
+    - /^master/
   allow_failure: true
   when: manual
 
