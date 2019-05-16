@@ -350,7 +350,7 @@ success_branch:
   stage: notify
   script:
     # Send failure notification to flow inbox (no emoji allowed :( ).
-    - ./.gitlab-ci/bin/flowdock-notify.sh inbox "Deployment PASSSED to ${PROJECT_ENV}" "for <a href="${CI_PIPELINE_URL}">${CI_COMMIT_SHORT_SHA}</a> ${CI_COMMIT_TITLE}"
+    - ./.gitlab-ci/bin/flowdock-notify.sh inbox "Deployment PASSED to ${PROJECT_ENV}" "for <a href="${CI_PIPELINE_URL}">${CI_COMMIT_SHORT_SHA}</a> ${CI_COMMIT_TITLE}"
   when: on_success
   only:
     - /^feature/

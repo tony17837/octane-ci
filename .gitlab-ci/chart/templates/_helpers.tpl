@@ -49,4 +49,3 @@ Create a URL base for all project services
 {{- define "chart.project.url.base" -}}
 {{- printf "%s.%s.kube.p2devcloud.com" .Values.ingress.url.env .Values.ingress.url.project -}}
 {{- end -}}
-
