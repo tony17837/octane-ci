@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 ## Build the codebase via composer and npm
 ##
-## Usage: fin build
+## Usage: fin make
 
 # This runs within the CLI container, so all tools are available.
 #: exec_target = cli
@@ -47,7 +47,7 @@ if [[ $DO_COMPOSER -eq 1 ]]; then
 fi
 
 # Build the theme if it exists.
-if [ -e ${THEME_PATH} ]; then
+if [[ -e "${THEME_PATH}/package.json" ]]; then
   DO_THEME=1
   if [ -z $CONFIRM ]; then
     read -p "Do you want to re-build Theme? [y]/n "
