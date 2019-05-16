@@ -189,6 +189,7 @@ deploy_feature:
   only:
     # Set the branch for the environment here.
     - /^feature/
+  allow_failure: true
   when: manual
 
 # Deploy the an environment with a different branch name.
@@ -304,7 +305,7 @@ x_destroy_feature:
     # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
     name: feature-${CI_COMMIT_SHORT_SHA}
     url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
-    #action: stop
+    action: stop
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
