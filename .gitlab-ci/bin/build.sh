@@ -7,8 +7,11 @@ set -ex
 # Login so we can push images to the registry
 docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
+# Initial setup if this is Octane.
+if [ -e .octane/setup.sh ]; then docker-compose -f .gitlab-ci/build.yml run --rm base .octane/setup.sh; fi
+
 # assemble the codebase
-docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/init.sh -y
+docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
 
 # bundle it into a docker image
 cp .gitlab-ci/Dockerfile Dockerfile

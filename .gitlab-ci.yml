@@ -100,7 +100,7 @@ validate_feature:
   stage: validate
   script:
     # assemble the codebase
-    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/init.sh -y
+    - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/make -y
     # Run linting etc.
     - docker-compose -f .gitlab-ci/build.yml run --rm base ./bin/validate
     # Run unit tests.

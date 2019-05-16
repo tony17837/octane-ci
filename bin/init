@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
-## Initializes the project
+## Initializes the project.
+## Creates a new project if run for the first time.
 ##
-## This script is only intended to be run via "fin"
+## This script is ONLY intended to be run via "fin init"
+
+set -e
 
 # Initialize stack.
 fin project start
 
-# First time project creation, remove old Octane composer lock file.
-# Allows project to have its own lock file.
-rm -rf composer.lock
+# If .octane folder exists, perform new project initialization.
+if [ -e ".octane/generate.sh" ]; then
+  fin exec .octane/generate.sh
+  # Remove .octane folder to prevent new project the next time.
+  rm -rf .octane
+fi
 
-# Run the common init script within the cli container.
-fin exec bin/init.sh -y
+# Build the codebase.
+fin exec bin/make -y
 
 # Install initial site.
 fin exec bin/install -y
