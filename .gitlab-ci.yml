@@ -278,9 +278,9 @@ x_destroy_env:
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
-  dependencies:
-    # Bring in the manifest artifact
-    - deploy
+  #dependencies:
+  #  # Bring in the manifest artifact
+  #  - deploy
   only:
     - /^qa/
     - /^test/
@@ -305,9 +305,9 @@ x_destroy_feature:
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
-  dependencies:
-    # Bring in the manifest artifact
-    - test_feature
+  #dependencies:
+  #  # Bring in the manifest artifact
+  #  - test_feature
   only:
     - /^feature/
   allow_failure: true
