@@ -9,12 +9,12 @@ variables:
   # PROJECT_NAME is ideally set in the CI/CD variables instead of declared here
   # PROJECT_NAME: PUT_PROJECT_NAME_HERE
 
-  # KUBE_NAMESPACE is ideally set in the CI/CD variables instead of declared here
+  # KUBE_NAMESPACE is set in the CI/CD variables instead of declared here
   # Normally PROJECT_NAME-project
   # KUBE_NAMESPACE: PUT_NAMESPACE_HERE
 
-  # CI_REGISTRY_IMAGE isn't used directly to structurally allow for projects with
-  # multiple images which may need to be built. However, the majority are
+  # CI_REGISTRY_IMAGE isn't used directly to structurally allow for projects
+  # with multiple images which may need to be built. However, the majority are
   # expected to only ever need to build one image.
   WEB_IMAGE: ${CI_REGISTRY_IMAGE}/web
 
@@ -27,9 +27,10 @@ variables:
   # specific to each different environment.
   PROJECT_ENV: ${CI_COMMIT_REF_SLUG}
 
-  # Specify the name of the main branch to use for building feature branches
-  # MAIN_BRANCH: master
-  MAIN_BRANCH: qa
+  # Specify the name of the main branch to use as starting cache for building
+  # feature branches
+  # MAIN_BRANCH: qa
+  MAIN_BRANCH: master
 
 stages:
   # tasks are intended for items which are only run manually and don't need
@@ -46,7 +47,7 @@ stages:
   - cleanup
 
 before_script:
-  # Dump some debugging so we know what variables and values we have to work with.
+  # Dump environment so we know what variables and values we have to work with.
   - set
   # Sanity check to make sure the project is configured.
   - ./.gitlab-ci/bin/check-settings.sh
