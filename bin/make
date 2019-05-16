@@ -36,14 +36,7 @@ fi
 
 if [[ $DO_COMPOSER -eq 1 ]]; then
   printf "$INFO_SLUG Installing composer dependencies...\n"
-  # Install project dependencies from composer.
-  # Uncomment the following command if you want to continue building if patches
-  # fail to apply.
-  #COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_DISCARD_CHANGES=1 composer install --ansi --no-suggest --profile -vvv
-  #
-  # Uncomment the following command if you want to ABORT building if patches
-  # fail to apply.
-  COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest
+  COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_EXIT_ON_PATCH_FAILURE=1 composer install --ansi --no-suggest
 fi
 
 # Build the theme if it exists.
