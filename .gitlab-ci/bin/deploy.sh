@@ -27,7 +27,7 @@ helm dependency build .gitlab-ci/chart
 # Create env configMap from .env file.
 #   Remove the quotes around values since kubectl expects simple key=value
 cat .env | tr -d "\"" >.gitlab-ci/.env
-kubectl create configmap ${RELEASE_NAME}-${CI_ENVIRONMENT_SLUG}-env-config --from-env-file=.gitlab-ci/.env -o yaml --dry-run > .gitlab-ci/manifests/${RELEASE_NAME}-env-config.yaml
+kubectl create configmap ${RELEASE_NAME}-env-config --from-env-file=.gitlab-ci/.env -o yaml --dry-run > .gitlab-ci/manifests/${RELEASE_NAME}-env-config.yaml
 
 # Create additional values from environment.
 .gitlab-ci/bin/env-values.sh > .gitlab-ci/env-values.yaml

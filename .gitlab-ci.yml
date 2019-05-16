@@ -130,6 +130,7 @@ deploy:
     # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
     name: ${CI_COMMIT_REF_SLUG}
     url: http://www.${CI_COMMIT_REF_SLUG}.${PROJECT_NAME}.kube.p2devcloud.com
+    on_stop: x_destroy_env
   script:
     # Call common deploy script.  Should not need to modify.
     - .gitlab-ci/bin/deploy.sh
@@ -146,6 +147,48 @@ deploy:
     - /^test/
     - /^develop/
     - /^master/
+
+# Install and test a feature branch manually.
+deploy_feature:
+  stage: deploy
+  variables:
+    PROJECT_ENV: feature-${CI_COMMIT_SHORT_SHA}
+    RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
+  environment:
+    # Cannot use environment variables here, only gitlab variables.
+    # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
+    name: feature-${CI_COMMIT_SHORT_SHA}
+    url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
+    on_stop: x_destroy_feature
+  script:
+    # Call common deploy script.  Should not need to modify.
+    - .gitlab-ci/bin/build.sh
+    # Call common deploy script.  Should not need to modify.
+    - .gitlab-ci/bin/deploy.sh
+    # Fresh install for feature branches being tested.
+    - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/install -y
+    - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/test
+  artifacts:
+    # Save the manifests from the deployment so it can be deleted later.
+    name: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}-manifests
+    # Expire these since feature-branch environments are not long-lived.
+    expire_in: 1 week
+    paths:
+      - .gitlab-ci/manifests
+  cache:
+    # Pull the cache from the main branch.
+    # Speeds up feature branch build so not starting from scratch.
+    key: ${PROJECT_NAME}-${MAIN_BRANCH}
+    # Prevent cache from being updated/pushed.
+    policy: pull
+    paths:
+      - build
+      - vendor
+      - project/themes/*/node_modules
+  only:
+    # Set the branch for the environment here.
+    - /^feature/
+  when: manual
 
 # Deploy the an environment with a different branch name.
 # Use this job if your want a different environment name for a branch.
@@ -206,47 +249,6 @@ test:
     - /^develop/
     - /^master/
 
-# Install and test a feature branch manually.
-test_feature:
-  stage: tasks
-  variables:
-    PROJECT_ENV: feature-${CI_COMMIT_SHORT_SHA}
-    RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
-  environment:
-    # Cannot use environment variables here, only gitlab variables.
-    # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
-    name: feature-${CI_COMMIT_SHORT_SHA}
-    url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
-  script:
-    # Call common deploy script.  Should not need to modify.
-    - .gitlab-ci/bin/build.sh
-    # Call common deploy script.  Should not need to modify.
-    - .gitlab-ci/bin/deploy.sh
-    # Fresh install for feature branches being tested.
-    - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/install -y
-    - ./.gitlab-ci/bin/exec.sh cli /var/www/bin/test
-  artifacts:
-    # Save the manifests from the deployment so it can be deleted later.
-    name: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}-manifests
-    # Expire these since feature-branch environments are not long-lived.
-    expire_in: 1 week
-    paths:
-      - .gitlab-ci/manifests
-  cache:
-    # Pull the cache from the main branch.
-    # Speeds up feature branch build so not starting from scratch.
-    key: ${PROJECT_NAME}-${MAIN_BRANCH}
-    # Prevent cache from being updated/pushed.
-    policy: pull
-    paths:
-      - build
-      - vendor
-      - project/themes/*/node_modules
-  only:
-    # Set the branch for the environment here.
-    - /^feature/
-  when: manual
-
 # Manual task to reinstall Drupal when needed.
 install:
   stage: tasks
@@ -262,13 +264,17 @@ install:
   when: manual
 
 # Purge the Kubernetes environment manually when needed.
+# Set up as the stop action for deploy job, so stage needs to be deploy.
 x_destroy_env:
-  stage: cleanup
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
   environment:
     # Cannot use environment variables here, only gitlab variables.
     # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
     name: ${CI_COMMIT_REF_SLUG}
     url: http://www.${CI_COMMIT_REF_SLUG}.${PROJECT_NAME}.kube.p2devcloud.com
+    action: stop
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
@@ -282,8 +288,11 @@ x_destroy_env:
   when: manual
 
 # Purge the feature branch Kubernetes environment manually when needed.
+# Set up as the stop action for feature_test job, so stage needs to be deploy.
 x_destroy_feature:
-  stage: cleanup
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
   variables:
     PROJECT_ENV: feature-${CI_COMMIT_SHORT_SHA}
     RELEASE_NAME: ${PROJECT_NAME}-feature-${CI_COMMIT_SHORT_SHA}
@@ -292,6 +301,7 @@ x_destroy_feature:
     # Also cannot use $PROJECT_ENV since GitLab doesn't support vars in vars.
     name: feature-${CI_COMMIT_SHORT_SHA}
     url: http://www.feature-${CI_COMMIT_SHORT_SHA}.${PROJECT_NAME}.kube.p2devcloud.com
+    action: stop
   script:
     # Remove everything that was deployed for this environment.
     - kubectl delete --recursive --filename .gitlab-ci/manifests
