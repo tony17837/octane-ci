@@ -310,7 +310,7 @@ x_destroy_feature:
     - kubectl delete --recursive --filename .gitlab-ci/manifests
   dependencies:
     # Bring in the manifest artifact
-    - test_feature
+    - deploy_feature
   only:
     - /^feature/
   allow_failure: true
