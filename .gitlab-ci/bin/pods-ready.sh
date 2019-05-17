@@ -9,15 +9,13 @@
 # For the full copyright and license information, please view the LICENSE
 # file that was distributed with this source code.
 
-# Usage: wait-until-pods-ready PROJECTNAME BRANCH PERIOD INTERVAL
-# PROJECTNAME-BRANCH is used to filter the pods that need to be checked.
-# Namespace of PROJECTNAME-project is used if KUBE_NAMESPACE is not set.
+# Usage: wait-until-pods-ready RELEASE PERIOD INTERVAL
+# RELEASE is used to filter the pods that need to be checked.
+# Namespace of PROJECT_NAME-project is used if KUBE_NAMESPACE is not set.
 # PERIOD defaults to 240
 # INTERVAL defaults to 10
 
-PROJECT_NAME="$1"
-BRANCH="$2"
-RELEASE=${PROJECT_NAME}-${BRANCH}
+RELEASE="$1"
 
 set -e
 
@@ -60,8 +58,8 @@ function __label_pods() {
 function __wait-until-pods-ready() {
   local period interval i pods
 
-  period="${3:-240}"
-  interval="${4:-10}"
+  period="${2:-240}"
+  interval="${3:-10}"
 
   if [[ ${KUBE_NAMESPACE} != "" ]]; then
     NAMESPACE="-n ${KUBE_NAMESPACE}"
