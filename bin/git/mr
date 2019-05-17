@@ -15,11 +15,20 @@ export $(grep -v '^#' .env | xargs)
 LAB="docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git outrigger/lab"
 
 read -p "Merge Request summary?  " varDesc
-varDesc=$(echo "$varDesc" | tr '[:upper:]' '[:lower:]')
 
 FEATURE_BRANCH="$(git symbolic-ref HEAD 2>/dev/null)"
+ISSUE_NUM="${FEATURE_BRANCH//[!0-9]/}"
 
-$LAB mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_BRANCH:: $JIRA_NAME-$ISSUE_NUM - $varDesc"
-$LAB mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_BRANCH:: $JIRA_NAME-$ISSUE_NUM - $varDesc"
+if [ ! -z ${JIRA_NAME} ]; then
+  JIRA_NAME="${JIRA_NAME}-"
+fi
+
+MASTER_BRANCH=${MASTER_BRANCH:-master}
+DEVELOP_BRANCH=${DEVELOP_BRANCH:-develop}
+MASTER_UPPER=$(echo ${MASTER_BRANCH} | tr '[:lower:]' '[:upper:]')
+DEVELOP_UPPER=$(echo ${DEVELOP_BRANCH} | tr '[:lower:]' '[:upper:]')
+
+lab mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
+lab mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
 
 
