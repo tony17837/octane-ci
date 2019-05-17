@@ -55,7 +55,6 @@ if [[ -e "${THEME_PATH}/package.json" ]]; then
     printf "$INFO_SLUG Rebuilding theme...\n"
     cd ${THEME_PATH}
     npm install
-    npm run setup
     npm run build:drupal
   fi
 fi
