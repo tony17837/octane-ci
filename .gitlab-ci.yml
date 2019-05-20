@@ -68,6 +68,7 @@ build:
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
+      - docroot
       - build
       - vendor
       - project/themes/*/node_modules
@@ -86,6 +87,7 @@ validate:
   cache:
     key: ${PROJECT_NAME}-${CI_COMMIT_REF_SLUG}
     paths:
+      - docroot
       - build
       - vendor
       - project/themes/*/node_modules
@@ -113,6 +115,7 @@ validate_feature:
     # Prevent cache from being updated/pushed.
     policy: pull
     paths:
+      - docroot
       - build
       - vendor
       - project/themes/*/node_modules
@@ -183,6 +186,7 @@ deploy_feature:
     # Prevent cache from being updated/pushed.
     policy: pull
     paths:
+      - docroot
       - build
       - vendor
       - project/themes/*/node_modules
