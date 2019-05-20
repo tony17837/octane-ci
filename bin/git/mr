@@ -1,31 +1,37 @@
 #!/usr/bin/env bash
-# Used for wunderflow to create two MRs at the same time to two different
-# mainline branches.  Set the branch names in the .env file for project.
+## Used for wunderflow to create two MRs at the same time to two different
+## mainline branches.  Set the branch names in the .env file for project.
+## Issue number taken from current feature/* branch.
+## Usage: mr [Description]
 
-GITDIR=$(git rev-parse --show-toplevel)
-if [ -z ${GITDIR} ]; then
-  echo "Cannot find a git repository"
-  exit 1
-fi
+set -e
 
 # Read environment variables from .env file, skipping comments.
 export $(grep -v '^#' .env | xargs)
 
-# Define the command to run the "lab" cli tool
-LAB="docker run -it --rm -v ${HOME}:/root -v ${GITDIR}:/home/git outrigger/lab"
+# Run the lab init script to verify access.
+dirName=`dirname "$0"`
+$dirName/lab init
 
-read -p "Merge Request summary?  " varDesc
+# Get MR summary from command line arguments by default.
+varDesc="$@"
+if [ -z "${varDesc}" ]; then
+  read -p "Merge Request summary?  " varDesc
+  if [ -z "${varDesc}" ]; then
+    echo "No summary given, aborting."
+    exit 1
+  fi
+fi
 
-if [ -z ${varDesc} ]; then
-  echo "No summary given, aborting."
-  exit 1
+if [ ! -z ${JIRA_NAME} ]; then
+  JIRA_NAME="${JIRA_NAME}-"
 fi
 
 FEATURE_BRANCH="$(git symbolic-ref HEAD 2>/dev/null)"
 ISSUE_NUM="${FEATURE_BRANCH//[!0-9]/}"
-
-if [ ! -z ${JIRA_NAME} ]; then
-  JIRA_NAME="${JIRA_NAME}-"
+if [ -z "$ISSUE_NUM" ]; then
+  ISSUE_NUM="NT"
+  JIRA_NAME=""
 fi
 
 MASTER_BRANCH=${MASTER_BRANCH:-master}
@@ -34,8 +40,8 @@ MASTER_UPPER=$(echo ${MASTER_BRANCH} | tr '[:lower:]' '[:upper:]')
 DEVELOP_UPPER=$(echo ${DEVELOP_BRANCH} | tr '[:lower:]' '[:upper:]')
 
 echo "Creating MR for $DEVELOP_UPPER..."
-$LAB mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
+$dirName/lab mr create origin $DEVELOP_BRANCH -l $DEVELOP_UPPER -m "$DEVELOP_UPPER : $JIRA_NAME$ISSUE_NUM : $varDesc"
 echo "Creating MR for $MASTER_UPPER..."
-$LAB mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
+$dirName/lab mr create origin $MASTER_BRANCH -l $MASTER_UPPER -m "$MASTER_UPPER : $JIRA_NAME$ISSUE_NUM : $varDesc"
 
 
