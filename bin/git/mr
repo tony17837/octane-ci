@@ -34,8 +34,8 @@ MASTER_UPPER=$(echo ${MASTER_BRANCH} | tr '[:lower:]' '[:upper:]')
 DEVELOP_UPPER=$(echo ${DEVELOP_BRANCH} | tr '[:lower:]' '[:upper:]')
 
 echo "Creating MR for $DEVELOP_UPPER..."
-lab mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
+$LAB mr create origin $DEVELOP_BRANCH -l $DEVELOP_BRANCH -m "$DEVELOP_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
 echo "Creating MR for $MASTER_UPPER..."
-lab mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
+$LAB mr create origin $MASTER_BRANCH -l $MASTER_BRANCH -m "$MASTER_UPPER:: $JIRA_NAME$ISSUE_NUM: $varDesc"
 
 
