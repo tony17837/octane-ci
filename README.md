@@ -51,22 +51,18 @@ the latest configuration.  Done after a `git pull`.  If this does not detect
 a valid Drupal installation it will prompt you to install a profile.
 * `fin export` : Used when you have finished work and want to export your
 configuration before doing a commit/push.
-* `fin build` : Run `composer install` to install/update dependencies. 
-(NOTE: Because Docksal has it's own ``fin build`` command you actually have
-to run this via ``fin exec bin/build``, but see the following ``rebuild`` 
-command for the more common usage.)
-* `fin rebuild`: Calls both `fin build` followed by `fin import`. Used when
+* `fin make` : Run `composer install` to install/update dependencies. 
+* `fin rebuild`: Calls both `fin make` followed by `fin import`. Used when
 starting a new branch to ensure you have all proper dependencies installed.
 * `fin validate` : Runs PHPCS style checks. Should be done before commit/push.
 CI build will fail if validation doesn't pass.
 * `fin test` : Runs tests.  Takes an argument for `unit`, `kernel`, `functional`,
-`functional-javascript`, `existing-site` to determine which phpUnit test-suite
+`functional-javascript`, `existing-site`, `behat` to determine which phpUnit test-suite
 to run. Without arguments it will run all except unit tests. If multiple 
 arguments are passed, they are sent directly to phpUnit.
 * `fin install` : Reinstall Drupal from scratch.
 * `fin newticket`: Prompts for a JIRA ticket number and creates a new ``feature/*``
-branch. Modify this script if your project is not using the default ``qa`` and
-``test`` Wunderflow branch strategy.
+branch. Modify this script if your project is not using the default Wunderflow branch strategy.
 * `fin fix-perms`: Sets the ownership and permission of the Drupal ``sites/default/files``
 folder. Used by other scripts.
 * `fin theme`: Used to compile the theme and then run browserstack to watch for sass, js, twig changes.
@@ -117,21 +113,18 @@ Build/CLI container instead of running locally.
 ## Git Branching
 By default, Octane is set up to support the [Wunderflow](https://wunderflow.wunder.io/) 
 workflow. Main branches should be named for the environment to be created
-in the cloud via GitLab CI.  By default, the following branch names are used:
+in the cloud via GitLab CI.  Branch names can be changed in the `.env` file.
+By default, the following branch names are used:
 
-* `qa` : The mainline branch used by the QA analyst to perform full release
-testing. Called the `master` branch in Wunderflow but the name was changed
-to prevent confusion with other workflows or prior developer assumptions.
+* `master` : The mainline branch used by the QA analyst to perform full release
+testing. An alternate name of `qa` is also supported.
 **This is the branch used as the base for new `feature/*` branches.**
-* `test` : The mainline branch where developer feature branches are initially
-merged for test and integration. Called the `develop` branch in Wunderflow but
-the name was changed to confusion with other workflows or prior developer assumptions.
+* `develop` : The mainline branch where developer feature branches are initially
+merged for test and integration.   An alternate name of `test` is also supported.
 **This is the DEFAULT branch of a project and is what merge-requests are created
 against for initial integration testing.**
 * `feature/*` : Individual branches for each JIRA ticket or feature. Created using
-`qa` branch as the base, and then merged into `test` for integration.
-
-The term `develop` refers the developer's local environment and branches.
+`master` branch as the base, and then merged into `develop` for integration.
 
 ## GitLab CI Integration
 The `.gitlab-ci` folder contains all of the scripts, charts, templates, etc for the
@@ -143,11 +136,11 @@ the following job stages are defined:
 * `tasks` : Contains manually executed tasks for one-off needs, such as reinstalling Drupal
 in an environment, or cleaning up the Kubernetes cloud environment for a project.
 * `build` : Responsible for building the code base (composer, npm, etc) and building a
-docker image of the site pushed to the GitLab registry.  Runs the `bin/build` script.
+docker image of the site pushed to the GitLab registry.  Runs the `bin/make` script.
 * `validate` : Responsible for linting, checking code style, and running Unit tests.
 Runs the `bin/validate` script.
 * `deploy` : After validation, this stage pushes the docker image for the project to
-the Kubernetes cloud using the charts and templates defined within the `.gitlab-ci` folder.
+the Kubernetes cluster using the charts and templates defined within the `.gitlab-ci` folder.
 Projects should exercise caution when modifying these charts when adding additional needed
 services.  If you have added additional containers to your `docksal.yml` configuration
 you will likely need to make similar changes and additions to the charts needed to
@@ -157,16 +150,21 @@ config-import, etc). Runs the `bin/import` script.
 * `test` : Responsible for running the full set of tests (except Kernel).  Octane
 includes some sample `ExistingSite` tests to verify the Drupal environment is working.
 Runs the `bin/test` script.
-* `notify` : The final stage can send notifications based on success or failure.
+* `notify` : This stage can send notifications based on success or failure.
 By default this is set to send notifications to flowdock if you have set the
 FLOWDOCK_API_TOKEN environment variable in your GitLab project CI/CD settings.
+* `cleanup` : This stage provides manual tasks for cleaning up and destroying
+the deployment on the Kubernetes cluster.
 
 The above pipeline is configured by default to trigger on any push/merge to either
-the `test` or `qa` main branches. For each branch, a site will be deployed to
-`www.BRANCH.PROJECT.kube.p2devcloud.com` within the Kubernetes Cloud.
+the `develop` or `master` main branches. For each branch, a site will be deployed to
+`www.BRANCH.PROJECT.kube.p2devcloud.com` within the Kubernetes Cluster.
 
 Commits to any `feature/*` branch will run a condensed pipeline of only the
 `build` and `validate` stages, but will not cause additional sites to be created.
+A manual `deploy` task can be triggered for a feature branch that will build
+the site and install from scratch and spin up an environment with the url of
+`www.feature-HASH.PROJECT.kube.p2devcloud.com` within the Kubernetes Cluster.
 
 The `notify` stage has separate jobs for notifications about the mainline branches
 vs the feature branches.
