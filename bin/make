@@ -41,7 +41,7 @@ if [[ $DO_COMPOSER -eq 1 ]]; then
   # can be skipped using the 'patches-ignore' functionality documented here:
   # https://github.com/cweagans/composer-patches#ignoring-patches
   # COMPOSER_PROCESS_TIMEOUT=2000 COMPOSER_EXIT_ON_PATCH_FAILURE=0 composer install --ansi --no-suggest
-  COMPOSER_PROCESS_TIMEOUT=2000 composer install --ansi --no-suggest
+  COMPOSER_MEMORY_LIMIT=-1 COMPOSER_PROCESS_TIMEOUT=5000 composer install --ansi --no-suggest
 fi
 
 # Build the theme if it exists.

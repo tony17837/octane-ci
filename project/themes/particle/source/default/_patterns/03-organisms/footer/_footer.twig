@@ -1,0 +1,16 @@
+{#
+/**
+ * @file Footer!
+ * Implements a grid of cards using Bootstrap layout.
+ *
+ * Available variables:
+ * - footer.slogan: [string]: A handy slogan to display.
+ */
+#}
+
+<footer class="container p-3 footer" role="contentinfo">
+  {% block footer %}
+    <hr>
+    {{ footer.slogan }}
+  {% endblock footer %}
+</footer>

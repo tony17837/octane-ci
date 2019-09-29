@@ -61,7 +61,18 @@
         "harvesthq/chosen": "^1.7",
         "kporras07/composer-symlinks": "^0.1.0@dev",
         "roave/security-advisories": "dev-master",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "zaporylie/composer-drupal-optimizations": "^1.0",
+        "drupal/entity_usage": "^2.0",
+        "drupal/adminimal_theme": "^1.5",
+        "drupal/adminimal_admin_toolbar": "1.x-dev",
+        "drupal/ui_patterns": "^1.1",
+        "drupal/ui_patterns_pattern_lab": "1.x-dev",
+        "drupal/ui_patterns_layout_builder": "1.x-dev",
+        "drupal/ui_patterns_from_layouts": "1.x-dev",
+        "drupal/ui_patterns_settings": "^1.0",
+        "drupal/twig_tools": "^1.1",
+        "drupal/patternkit": "1.x-dev",
+        "drupal/bootstrap_paragraphs": "2.x-dev"
     },
     "autoload-dev": {
         "psr-4": { "Octane\\Tests\\": "project/tests/src/" }
